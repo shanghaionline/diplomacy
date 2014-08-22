@@ -68,8 +68,12 @@ public class UserServiceImpl implements UserService {
 		userDao.refresh(user);
 		return user;
 	}
-	
-	
+
+	@Override
+	public String postInvited(User user) {
+		String checksum = PasswordUtil.invateHash(user.getId());
+		return String.format("%d/%s", user.getId(), checksum);
+	}
 
 	@Override
 	@Transactional(readOnly = false)
