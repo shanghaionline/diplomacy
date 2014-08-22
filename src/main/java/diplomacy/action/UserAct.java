@@ -26,6 +26,12 @@ public class UserAct {
 		userService.create("admin", "admin", UserStatus.ENABLED);
 		return "index";
 	}
+	@RequestMapping("/groupfresh")
+	public String freshGroup(ModelMap model) {
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if (user != null) userService.refreshGroup(user);
+		return "index";
+	}
 	
 	@RequestMapping(value = "/invite/{userId}/{checksum}", method = RequestMethod.GET)
 	public String invite(@PathVariable Long userId, @PathVariable String checksum, ModelMap model) {

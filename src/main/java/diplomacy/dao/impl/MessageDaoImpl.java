@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import diplomacy.dao.MessageDao;
 import diplomacy.entity.Message;
+import diplomacy.entity.MessageBox;
 import diplomacy.entity.MessageMeta;
 import diplomacy.entity.status.MessageStatus;
 import diplomacy.entity.status.MessageType;
@@ -50,6 +51,17 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		meta.setMessage(message);
 		template.saveOrUpdate(meta);
 	}
+
+	@Override
+	public MessageBox putMessageBox(Message message) {
+		MessageBox box = new MessageBox();
+		box.setMessage(message);
+		box.setReceiver(message.getReceiver());
+		box.setStatus(MessageStatus.UNREAD);
+		getHibernateTemplate().saveOrUpdate(box);
+		return box;
+	}
+
 
 	@Override
 	public Message getValidCodeMessage(String target) {

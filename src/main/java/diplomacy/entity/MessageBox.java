@@ -2,11 +2,15 @@ package diplomacy.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import diplomacy.entity.status.MessageStatus;
 
 @Entity
 @Table(name = "dip_message_box")
@@ -14,7 +18,7 @@ public class MessageBox {
 	private Long id;
 	private User receiver;
 	private Message message;
-	private String status;
+	private MessageStatus status;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,11 +42,12 @@ public class MessageBox {
 	public void setMessage(Message message) {
 		this.message = message;
 	}
+	@Enumerated(EnumType.STRING)
 	@Column(length = 11)
-	public String getStatus() {
+	public MessageStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(MessageStatus status) {
 		this.status = status;
 	}
 

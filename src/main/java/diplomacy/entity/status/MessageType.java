@@ -1,5 +1,5 @@
 package diplomacy.entity.status;
 
 public enum MessageType {
-	VALIDCODE
+	VALIDCODE, SINGLEMSG
 }

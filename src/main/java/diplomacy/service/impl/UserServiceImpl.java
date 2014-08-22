@@ -20,7 +20,8 @@ import diplomacy.util.PasswordUtil;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
-	static final String[] PERMISSIONS = new String[]{"PERM_HANDLE_INVITATION"};
+	static final String[] PERMISSIONS = new String[]{
+		"PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE"};
 	static final Map<String, String[]> GROUP_PERMS = new HashMap<String, String[]>();
 	static {
 		GROUP_PERMS.put("ADMIN", PERMISSIONS);
@@ -126,7 +127,8 @@ public class UserServiceImpl implements UserService {
 		if (user == null) return null;
 		int permsCnt = 0;
 		for (String perm : perms) {
-			if (user.getMetas().get(perm).getValue().equalsIgnoreCase("PERM_ENABLED"))
+			UserMeta meta = user.getMetas().get(perm);
+			if (meta != null && meta.getValue().equalsIgnoreCase("PERM_ENABLED"))
 				permsCnt += 1;
 		}
 		if (permsCnt != perms.length) return null;
