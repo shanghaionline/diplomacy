@@ -54,12 +54,34 @@ public class UserServiceImpl implements UserService {
 		userDao.refresh(user);
 		return user;
 	}
+	
+
+	@Override
+	public User login(String login, String password) {
+		User user = userDao.getUserByLogin(login);
+		if (user == null || !PasswordUtil.check(user.getPasswd(), password))
+			return null;
+		return user;
+	}
 
 	@Override
 	public User get(Long id) {
 		User user = userDao.getUserById(id);
 		return user;
 	}
-	
+
+	@Override
+	public User perm(Long id, String... perms) {
+		if (id == null) return null;
+		User user = userDao.getUserById(id);
+		if (user == null) return null;
+		int permsCnt = 0;
+		for (String perm : perms) {
+			if (user.getMetas().get(perm).getValue().equalsIgnoreCase("PERM_ENABLED"))
+				permsCnt += 1;
+		}
+		if (permsCnt != perms.length) return null;
+		return user;
+	}
 	
 }
