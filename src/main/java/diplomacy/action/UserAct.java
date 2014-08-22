@@ -48,6 +48,8 @@ public class UserAct {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(ModelMap model) {
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		System.out.println("===============" + user);
 		return "user/login";
 	}
 	
@@ -58,6 +60,27 @@ public class UserAct {
 		User user = userService.login(username, password);
 		if (user == null) return "user/login";
 		model.addAttribute("SessionUserId", user.getId());
+		return "index";
+	}
+	
+	@RequestMapping("apply-invitation")
+	public String applyInvitation(ModelMap model, Long userId,
+			String username, String password, String group,
+			String nicename, String phone, String email) {
+		User admin = userService.perm((Long)model.get("SessionUserId"), 
+				"PERM_HANDLE_INVITATION");
+		User user = userService.get(userId);
+		if (admin == null || user == null) {
+			return "";
+		}
+		user.setLogin(username); user.setPasswd(password);
+		user.setNicename(nicename); user.setPhone(phone);
+		user.setEmail(email);
+		user.setGroup(group);
+		user = userService.passInvited(admin, user);
+		if (user == null) {
+			return "";
+		}
 		return "index";
 	}
 

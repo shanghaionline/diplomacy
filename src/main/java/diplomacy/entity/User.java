@@ -21,12 +21,15 @@ import diplomacy.entity.status.UserStatus;
 @Table(name = "dip_user")
 public class User {
 	private Long id;
+	private String group;
 	private String login;
 	private String passwd;
 	private String nicename;
 	private Date registered;
 	private UserStatus status;
 	private User inviter;
+	private String phone;
+	private String email;
 	private Map<String, UserMeta> metas;
 	
 	@Id
@@ -36,6 +39,13 @@ public class User {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	@Column(length = 20, name = "user_group")
+	public String getGroup() {
+		return group;
+	}
+	public void setGroup(String group) {
+		this.group = group;
 	}
 	@Column(length = 60, nullable = false)
 	public String getLogin() {
@@ -79,6 +89,23 @@ public class User {
 	public void setInviter(User inviter) {
 		this.inviter = inviter;
 	}
+	
+	@Column(length = 30)
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
+	@Column(length = 100)
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	@OneToMany(mappedBy = "user")
 	@MapKey(name = "key")
 	public Map<String, UserMeta> getMetas() {

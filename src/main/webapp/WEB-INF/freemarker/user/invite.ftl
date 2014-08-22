@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>INVITE</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>邀请</title>
   </head>
   <body>
-    <h1>INVITE</h1>
+    <h1>邀请</h1>
     <form method="post">
       <div><label>nicename</label><input name="nicename"/></div>
       <div><label>email</label><input name="email"/></div>
