@@ -1,12 +1,19 @@
 package diplomacy.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.servlet.ServletContext;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.multipart.MultipartFile;
 
 import diplomacy.dao.MessageDao;
 import diplomacy.dao.UserDao;
+import diplomacy.entity.Attachment;
 import diplomacy.entity.Message;
 import diplomacy.entity.MessageMeta;
 import diplomacy.entity.User;
@@ -16,8 +23,8 @@ import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
 
 @Service("messageService")
-public class MessageServiceImpl implements MessageService {
-	
+public class MessageServiceImpl implements MessageService, ServletContextAware {
+	private ServletContext servletContext;
 	private MessageDao messageDao;
 	private UserDao userDao;
 	private UserService userService;
@@ -62,7 +69,7 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	@Transactional(readOnly = false)
 	public Message sendSingleMessage(User sender, String receiver,
-			String title, String content, Long attachId) {
+			String title, String content, MultipartFile attachment) {
 		User rec = userDao.getUserByLogin(receiver);
 		if (userService.perm(sender, "PERM_SEND_SINGLE") == null ||
 				rec == null) return null;
@@ -74,6 +81,7 @@ public class MessageServiceImpl implements MessageService {
 		msg.setContent(content);
 		msg.setStatus(MessageStatus.READED);
 		messageDao.save(msg);
+		if (attachment != null) putAttachment(msg, attachment);
 		messageDao.putMessageBox(msg);
 		return null;
 	}
@@ -81,7 +89,7 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	@Transactional(readOnly = false)
 	public Message sendMultipleMessage(User sender, String perm, String title,
-			String content, Long attachId) {
+			String content, MultipartFile attachment) {
 		if (userService.perm(sender, "PERM_SEND_MULTIPLE", perm) == null) return null;
 		Message msg = new Message();
 		msg.setMsgType(MessageType.MULTIPLE);
@@ -90,16 +98,48 @@ public class MessageServiceImpl implements MessageService {
 		msg.setContent(content);
 		msg.setStatus(MessageStatus.READED);
 		messageDao.save(msg);
+		if (attachment != null) putAttachment(msg, attachment);
 		messageDao.setMessageMeta(msg, new MessageMeta("MULTIPLE_MESSAGE_PERM", perm));
 		for (User receiver : userService.listUserByPerm(perm)) {
 			messageDao.putMessageBox(msg, receiver);
 		}
 		return msg;
 	}
+	
+	private Attachment putAttachment(Message message, MultipartFile attachment) {
+		String uri = String.format("/attachment/%d%s", 
+				System.currentTimeMillis(), getFileSuffix(attachment.getOriginalFilename()));
+		String path = servletContext.getRealPath(uri);
+		Attachment ret = null;
+		try {
+			attachment.transferTo(new File(path));
+			ret = new Attachment();
+			ret.setMessage(message);
+			ret.setName(attachment.getOriginalFilename());
+			ret.setStatus("ENABLED");
+			ret.setUri(uri);
+			messageDao.putAttachment(ret);
+		} catch (IllegalStateException | IOException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+	private String getFileSuffix(String filename) {
+		int e = filename.lastIndexOf(".");
+		if (e == -1) {
+			return "";
+		}
+		return filename.substring(e);
+	}
 
 	private String makeValidCode() {
 		Random r = new Random();
 		return String.format("%04d", r.nextInt(10000));
+	}
+
+	
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
 	}
 
 	public void setMessageDao(MessageDao messageDao) {

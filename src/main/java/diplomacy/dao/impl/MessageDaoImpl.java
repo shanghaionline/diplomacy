@@ -13,6 +13,7 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import diplomacy.dao.MessageDao;
+import diplomacy.entity.Attachment;
 import diplomacy.entity.Message;
 import diplomacy.entity.MessageBox;
 import diplomacy.entity.MessageMeta;
@@ -84,6 +85,12 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		List<?> list = template.findByCriteria(criteria, 0, 1);
 		if (list.isEmpty()) return null;
 		return (Message)list.get(0);
+	}
+
+	@Override
+	public Attachment putAttachment(Attachment attachment) {
+		getHibernateTemplate().saveOrUpdate(attachment);
+		return attachment;
 	}
 
 }

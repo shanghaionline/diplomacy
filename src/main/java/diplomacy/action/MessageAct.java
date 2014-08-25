@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import diplomacy.entity.User;
 import diplomacy.service.MessageService;
@@ -30,13 +31,14 @@ public class MessageAct {
 	}
 	
 	@RequestMapping(value= "/sendmessage")
-	String sendMessage(ModelMap model, String receiver, String perm, String title, String content, Long attachmentId){
+	String sendMessage(ModelMap model, String receiver, String perm, String title, String content, 
+			MultipartFile attachment){
 		User sender = userService.perm((Long)model.get("SessionUserId"));
 		if (sender == null) return "";
 		if (perm == null || perm.isEmpty()) {
-			messageService.sendSingleMessage(sender, receiver, title, content, attachmentId);
+			messageService.sendSingleMessage(sender, receiver, title, content, attachment);
 		} else {
-			messageService.sendMultipleMessage(sender, perm, title, content, attachmentId);
+			messageService.sendMultipleMessage(sender, perm, title, content, attachment);
 		}
 		return "index";
 	}
