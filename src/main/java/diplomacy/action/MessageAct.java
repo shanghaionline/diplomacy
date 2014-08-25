@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import diplomacy.entity.Message;
 import diplomacy.entity.User;
 import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
@@ -36,6 +35,8 @@ public class MessageAct {
 		if (sender == null) return "";
 		if (perm == null || perm.isEmpty()) {
 			messageService.sendSingleMessage(sender, receiver, title, content, attachmentId);
+		} else {
+			messageService.sendMultipleMessage(sender, perm, title, content, attachmentId);
 		}
 		return "index";
 	}
@@ -46,7 +47,5 @@ public class MessageAct {
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
-	
 	
 }

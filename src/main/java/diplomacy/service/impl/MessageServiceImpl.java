@@ -78,6 +78,25 @@ public class MessageServiceImpl implements MessageService {
 		return null;
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public Message sendMultipleMessage(User sender, String perm, String title,
+			String content, Long attachId) {
+		if (userService.perm(sender, "PERM_SEND_MULTIPLE", perm) == null) return null;
+		Message msg = new Message();
+		msg.setMsgType(MessageType.MULTIPLE);
+		msg.setSender(sender);
+		msg.setTitle(title);
+		msg.setContent(content);
+		msg.setStatus(MessageStatus.READED);
+		messageDao.save(msg);
+		messageDao.setMessageMeta(msg, new MessageMeta("MULTIPLE_MESSAGE_PERM", perm));
+		for (User receiver : userService.listUserByPerm(perm)) {
+			messageDao.putMessageBox(msg, receiver);
+		}
+		return msg;
+	}
+
 	private String makeValidCode() {
 		Random r = new Random();
 		return String.format("%04d", r.nextInt(10000));

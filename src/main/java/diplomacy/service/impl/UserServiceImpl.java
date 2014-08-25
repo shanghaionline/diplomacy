@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -21,7 +22,7 @@ import diplomacy.util.PasswordUtil;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 	static final String[] PERMISSIONS = new String[]{
-		"PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE"};
+		"PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE", "PERM_SEND_MULTIPLE", "PERM_MESSAGE_MEMBER"};
 	static final Map<String, String[]> GROUP_PERMS = new HashMap<String, String[]>();
 	static {
 		GROUP_PERMS.put("ADMIN", PERMISSIONS);
@@ -45,6 +46,11 @@ public class UserServiceImpl implements UserService {
 		userDao.refresh(user);
 		refreshGroup(user);
 		return user;
+	}
+
+	@Override
+	public List<User> listUserByPerm(String perm) {
+		return userDao.listUserByMeta(perm, "PERM_ENABLED");
 	}
 
 	public void setUserDao(UserDao userDao) {

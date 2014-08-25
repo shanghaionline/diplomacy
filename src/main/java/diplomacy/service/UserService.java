@@ -1,5 +1,6 @@
 package diplomacy.service;
 
+import java.util.List;
 import java.util.Set;
 
 import diplomacy.entity.User;
@@ -7,6 +8,7 @@ import diplomacy.entity.status.UserStatus;
 
 public interface UserService {
 	User create(String login, String password, UserStatus status);
+	List<User> listUserByPerm(String perm);
 	User handleInvited(Long inviterId, String nicename, String phone, String email);
 	String postInvited(User user);
 	User passInvited(User admin, User user);

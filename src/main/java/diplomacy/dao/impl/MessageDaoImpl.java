@@ -16,6 +16,7 @@ import diplomacy.dao.MessageDao;
 import diplomacy.entity.Message;
 import diplomacy.entity.MessageBox;
 import diplomacy.entity.MessageMeta;
+import diplomacy.entity.User;
 import diplomacy.entity.status.MessageStatus;
 import diplomacy.entity.status.MessageType;
 
@@ -54,12 +55,17 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
 	@Override
 	public MessageBox putMessageBox(Message message) {
+		return putMessageBox(message, message.getReceiver());
+	}
+
+	@Override
+	public MessageBox putMessageBox(Message message, User receiver) {
 		MessageBox box = new MessageBox();
 		box.setMessage(message);
-		box.setReceiver(message.getReceiver());
+		box.setReceiver(receiver);
 		box.setStatus(MessageStatus.UNREAD);
 		getHibernateTemplate().saveOrUpdate(box);
-		return box;
+		return null;
 	}
 
 

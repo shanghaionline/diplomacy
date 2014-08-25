@@ -3,7 +3,9 @@ package diplomacy.dao.impl;
 import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -60,5 +62,19 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		template.saveOrUpdate(meta);
 	}
 
+	@Override
+	public List<User> listUserByMeta(String key, String value) {
+		HibernateTemplate template = getHibernateTemplate();
+		DetachedCriteria w = DetachedCriteria.forClass(UserMeta.class);
+		w.add(Restrictions.eq("key", key));
+		w.add(Restrictions.eq("value", value));
+		w.setProjection(Projections.property("id"));
+		DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+		criteria.add(Subqueries.exists(w));
+		criteria.add(Restrictions.eq("status", UserStatus.ENABLED));
+		@SuppressWarnings("unchecked")
+		List<User> ret = (List<User>)template.findByCriteria(criteria);
+		return ret;
+	}
 	
 }

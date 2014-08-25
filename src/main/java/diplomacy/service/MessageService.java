@@ -9,4 +9,6 @@ public interface MessageService {
 	boolean checkValidCode(String target, String code, boolean clean);
 	Message sendSingleMessage(User sender, String receiver, 
 			String title, String content, Long attachId);
+	Message sendMultipleMessage(User sender, String perm, 
+			String title, String content, Long attachId);
 }
