@@ -18,13 +18,11 @@ import diplomacy.entity.status.UserStatus;
 @Repository("userDao")
 public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
-
 	@Override
 	public void save(User user) {
 		HibernateTemplate template = getHibernateTemplate();
-		template.save(user);
+		template.saveOrUpdate(user);
 	}
-	
 
 	@Override
 	public void refresh(User user) {

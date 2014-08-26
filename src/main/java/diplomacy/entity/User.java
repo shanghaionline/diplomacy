@@ -33,7 +33,7 @@ public class User {
 	private Map<String, UserMeta> metas;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getId() {
 		return id;
 	}
