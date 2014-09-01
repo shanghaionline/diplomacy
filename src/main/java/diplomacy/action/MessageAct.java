@@ -40,8 +40,25 @@ public class MessageAct {
 		} else {
 			messageService.sendMultipleMessage(sender, perm, title, content, attachment);
 		}
-		return "index";
+		return "message/inbox";
 	}
+	
+	@RequestMapping(value="/inbox")
+	String inbox(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		return "message/inbox";
+	}
+	
+	@RequestMapping(value="/outbox")
+	String outbox(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		return "message/inbox";
+	}
+	
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;
 	}

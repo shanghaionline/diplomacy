@@ -1,0 +1,22 @@
+.article-list-div {
+	margin: 12px 0px;
+	padding-left: 20px;
+	border-bottom: 1px dashed #CCCCCC;
+	background: url('../images/circle.gif') no-repeat;
+}
+
+.article-title-div {
+	font-size: 13px;
+	margin: 6px 0px;
+	font-weight: 700;
+	text-align: left;
+}
+
+.article-summary-div {
+	margin: 6px 0px;
+}
+
+.article-attr-div {
+	margin: 6px 0px;
+	color: #999999;
+}

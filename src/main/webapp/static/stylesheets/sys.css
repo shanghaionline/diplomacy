@@ -1,0 +1,93 @@
+body {
+	color: #333;
+	font-size: 13px;
+	background: #F9F9F9;
+	font-family: Verdana, Arial, Vrinda, Tahoma;
+}
+
+a {
+	color: #333;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #FF6600;
+	cursor: pointer;
+}
+
+ul {
+	list-style-position: outside;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	margin: 1px 0px;
+	padding: 0;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 18px;
+	color: #333;
+	cursor: pointer;
+}
+
+li:hover {
+	color: #FF6600;
+	background: #ccc;
+}
+
+li a:hover {
+	color: #FF6600;
+	background: #ccc;
+}
+
+table {
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+	border: 1px solid #ccc;
+}
+
+th,td {
+	font-size: 13px;
+	padding: 2px;
+	vertical-align: middle;
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+}
+
+th {
+	text-align: center;
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	background: #6699FF;
+	border: 1px solid #ccc;
+}
+
+input {
+	line-height: 16px;
+	background: #F4F4F4;
+	border: 1px solid #A5ACB2;
+	overflow: hidden;
+}
+
+.top-body {
+	background: #0066CC;
+	line-height: 50px;
+}
+
+.top-div-title {
+	font-size: 20px;
+	margin-left: 20px;
+	text-align: left;
+	font-weight: 800;
+	color: #fff;
+}
+
+.left-div {
+	height: 500px;
+	border: 1px solid #CCCCCC;
+}

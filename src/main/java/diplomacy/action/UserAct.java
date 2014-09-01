@@ -33,6 +33,23 @@ public class UserAct {
 		return "index";
 	}
 	
+	@RequestMapping("/test")
+	public String test(String name, Integer age) {
+		System.out.println("=====" + PasswordUtil.invateHash(1L));
+		return "index";
+	}
+	
+	@RequestMapping("/get-invite")
+	public String getInvite(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if (user == null) return "common/error";
+		String checksum = PasswordUtil.invateHash(user.getId());
+		model.addAttribute("user", user);
+		model.addAttribute("checksum", checksum);
+		return "user/get-invite";
+	}
+	
+	
 	@RequestMapping(value = "/invite/{userId}/{checksum}", method = RequestMethod.GET)
 	public String invite(@PathVariable Long userId, @PathVariable String checksum, ModelMap model) {
 		if (!PasswordUtil.invateHash(userId).equalsIgnoreCase(checksum)) return "common/error";
@@ -46,27 +63,39 @@ public class UserAct {
 			@PathVariable Long userId, @PathVariable String checksum,
 			String nicename, String email, String phone, String code) {
 		if (!PasswordUtil.invateHash(userId).equalsIgnoreCase(checksum)) return "common/error";
-		if (!messageService.checkValidCode(phone, code)) return "user/invite";
+		if (!messageService.checkValidCode(phone, code)) {
+			model.addAttribute("errCodeMsg", "验证码错误");
+			model.addAttribute("nicename", nicename);
+			model.addAttribute("phone", phone);
+			model.addAttribute("email", email);
+			model.addAttribute("checksum", checksum);
+			return "user/invite";
+		}
 		User user = userService.handleInvited(userId, nicename, phone, email);
-		if (user == null) return "user/invite";
+		if (user == null) return "common/error";
 		return "index";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(ModelMap model) {
 		User user = userService.perm((Long)model.get("SessionUserId"));
-		System.out.println("===============" + user);
 		return "user/login";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(String username, String password, ModelMap model) {
 		if (username == null || username.trim().isEmpty() ||
-			password == null || password.trim().isEmpty()) return "user/login";
+			password == null || password.trim().isEmpty()) {
+			model.addAttribute("errorMsg", "用户名或密码不能为空");
+			return "user/login";
+		}
 		User user = userService.login(username, password);
-		if (user == null) return "user/login";
+		if (user == null) {
+			model.addAttribute("errorMsg", "用户名或密码错误");
+			return "user/login";
+		}
 		model.addAttribute("SessionUserId", user.getId());
-		return "index";
+		return "redirect:/message/inbox";
 	}
 	
 	@RequestMapping("apply-invitation")
@@ -89,7 +118,7 @@ public class UserAct {
 		}
 		return "index";
 	}
-
+	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
