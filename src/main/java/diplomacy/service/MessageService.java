@@ -1,5 +1,6 @@
 package diplomacy.service;
 
+import diplomacy.vo.PagerBean;
 import org.springframework.web.multipart.MultipartFile;
 
 import diplomacy.entity.Message;
@@ -13,4 +14,5 @@ public interface MessageService {
 			String title, String content, MultipartFile attachment);
 	Message sendMultipleMessage(User sender, String perm, 
 			String title, String content, MultipartFile attachment);
+    PagerBean<Message> listOutboxByPage(User user, int page, int size);
 }

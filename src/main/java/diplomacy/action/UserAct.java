@@ -92,6 +92,7 @@ public class UserAct {
 		User user = userService.login(username, password);
 		if (user == null) {
 			model.addAttribute("errorMsg", "用户名或密码错误");
+            model.addAttribute("username", username);
 			return "user/login";
 		}
 		model.addAttribute("SessionUserId", user.getId());

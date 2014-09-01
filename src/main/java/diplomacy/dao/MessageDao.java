@@ -5,6 +5,7 @@ import diplomacy.entity.Message;
 import diplomacy.entity.MessageBox;
 import diplomacy.entity.MessageMeta;
 import diplomacy.entity.User;
+import diplomacy.vo.PagerBean;
 
 public interface MessageDao {
 	void save(Message message);
@@ -15,4 +16,5 @@ public interface MessageDao {
 	MessageBox putMessageBox(Message message, User receiver);
 	Message getValidCodeMessage(String target);
 	Attachment putAttachment(Attachment attachment);
+    PagerBean<Message> listMessageBySender(User user, int offset, int limit);
 }

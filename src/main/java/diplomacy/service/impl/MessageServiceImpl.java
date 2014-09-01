@@ -6,6 +6,7 @@ import java.util.Random;
 
 import javax.servlet.ServletContext;
 
+import diplomacy.vo.PagerBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ServletContextAware;
@@ -104,8 +105,14 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 		}
 		return msg;
 	}
-	
-	private Attachment putAttachment(Message message, MultipartFile attachment) {
+
+    @Override
+    public PagerBean<Message> listOutboxByPage(User user, int page, int size) {
+        page = page <= 0 ? 1 : page;
+        return messageDao.listMessageBySender(user, (page - 1) * size, size);
+    }
+
+    private Attachment putAttachment(Message message, MultipartFile attachment) {
 		String uri = String.format("/attachment/%d%s", 
 				System.currentTimeMillis(), getFileSuffix(attachment.getOriginalFilename()));
 		String path = servletContext.getRealPath(uri);

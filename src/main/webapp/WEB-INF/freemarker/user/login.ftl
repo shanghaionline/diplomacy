@@ -1,4 +1,3 @@
-<#assign base="/diplomacy">
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="cn">
 <head>
@@ -18,7 +17,6 @@
     </script>
 </head>
 <body>
-	${base}
     <div class="bg">
     <div class="page">
 	<div class="head">
@@ -28,7 +26,7 @@
 	<#include "../include/top_include.ftl"/>
 	<div class="content">
 		<div class="main">
-		<form action="${base}/user/login" method="POST" >
+		<form action="${requestContext.contextPath}/user/login" method="POST" >
 		<div>
 	</div>
 	<table width="200px" border="0" align="center">
@@ -38,7 +36,7 @@
     </td>
     <td align="left">
       <input type="textfield" class="ipt_1"
-	     name="username" value=""/>
+	     name="username" value="${username!}"/>
     </td>
     </tr>
     <tr>

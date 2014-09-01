@@ -56,7 +56,7 @@ public class MessageAct {
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
-		return "message/inbox";
+		return "message/outbox";
 	}
 	
 	public void setMessageService(MessageService messageService) {

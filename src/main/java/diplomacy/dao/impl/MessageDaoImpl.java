@@ -3,6 +3,7 @@ package diplomacy.dao.impl;
 import java.util.Date;
 import java.util.List;
 
+import diplomacy.vo.PagerBean;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
@@ -92,5 +93,28 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		getHibernateTemplate().saveOrUpdate(attachment);
 		return attachment;
 	}
+
+    @Override
+    public PagerBean<Message> listMessageBySender(User user, int offset, int limit) {
+        PagerBean<Message> ret = new PagerBean<>();
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = queryCriteriaMessageBySender(user);
+        DetachedCriteria countCriteria = queryCriteriaMessageBySender(user);
+        criteria.addOrder(Property.forName("created").desc());
+        criteria.setProjection(Projections.rowCount());
+        ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
+        @SuppressWarnings("unchecked")
+        List<Message> list = (List<Message>)template.findByCriteria(criteria, offset, limit);
+        ret.setList(list);
+        ret.setStart(offset);
+        ret.setSize(limit);
+        return null;
+    }
+
+    private DetachedCriteria queryCriteriaMessageBySender(User user) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
+        criteria.add(Restrictions.eq("sender", user));
+        return criteria;
+    }
 
 }
