@@ -42,7 +42,6 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 		messageDao.setMessageMeta(msg, new MessageMeta("validcode_target", target));
 		messageDao.setMessageMeta(msg, new MessageMeta("validcode_code", code));
 		messageDao.refresh(msg);
-		messageDao.getValidCodeMessage(target);
 		return msg;
 	}
 	

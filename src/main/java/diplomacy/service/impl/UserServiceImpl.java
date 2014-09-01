@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 		user.setEmail("admin@admin.com");
 		user.setGroup("ADMIN");
 		userDao.save(user);
-		userDao.refresh(user);
+        userDao.refresh(user);
 		refreshGroup(user);
 		return user;
 	}
