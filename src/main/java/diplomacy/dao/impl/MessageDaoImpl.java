@@ -101,14 +101,14 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         DetachedCriteria criteria = queryCriteriaMessageBySender(user);
         DetachedCriteria countCriteria = queryCriteriaMessageBySender(user);
         criteria.addOrder(Property.forName("created").desc());
-        criteria.setProjection(Projections.rowCount());
+        countCriteria.setProjection(Projections.rowCount());
         ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
         @SuppressWarnings("unchecked")
         List<Message> list = (List<Message>)template.findByCriteria(criteria, offset, limit);
         ret.setList(list);
         ret.setStart(offset);
         ret.setSize(limit);
-        return null;
+        return ret;
     }
 
     private DetachedCriteria queryCriteriaMessageBySender(User user) {
