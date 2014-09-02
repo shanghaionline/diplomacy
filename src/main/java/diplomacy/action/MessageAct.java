@@ -45,11 +45,12 @@ public class MessageAct {
 		return "message/inbox";
 	}
 	
-	@RequestMapping(value="/inbox")
-	String inbox(ModelMap model){
+	@RequestMapping(value="/inbox/{page}")
+	String inbox(ModelMap model, @PathVariable int page){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
+        model.addAttribute("boxList", messageService.listInboxByPage(user, page, 20));
 		return "message/inbox";
 	}
 	

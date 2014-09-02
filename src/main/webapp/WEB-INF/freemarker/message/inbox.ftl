@@ -55,6 +55,17 @@
 	  <th class="tsource">发件人</th>
 	  <th class="ttime">发送时间</th>
 	</tr>
+
+    <#list boxList.list as item>
+    <tr>
+      <td><input type="checkbox"/></td>
+      <td>
+      ${item.message.title}
+      </td>
+      <td>${item.receiver.login}</td>
+      <td>${item.message.created?string}</td>
+    </tr>
+    </#list>
 	
 	<tr>
 	  <td colspan="4" class="access">
@@ -63,7 +74,9 @@
 	</tr>
 	<tr>
 	  <td colspan="4" class="pswitch">
-	    
+      <#list 1..boxList.page as pg>
+         <span><a href="${requestContext.contextPath}/message/inbox/${pg}">${pg}</a></span>
+      </#list>
 	  </td>
 	</tr>
       </table>

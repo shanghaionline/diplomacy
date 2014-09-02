@@ -17,4 +17,5 @@ public interface MessageDao {
 	Message getValidCodeMessage(String target);
 	Attachment putAttachment(Attachment attachment);
     PagerBean<Message> listMessageBySender(User user, int offset, int limit);
+    PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit);
 }

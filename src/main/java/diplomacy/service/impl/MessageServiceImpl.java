@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.servlet.ServletContext;
 
+import diplomacy.entity.*;
 import diplomacy.entity.status.UserStatus;
 import diplomacy.vo.PagerBean;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import diplomacy.dao.MessageDao;
 import diplomacy.dao.UserDao;
-import diplomacy.entity.Attachment;
-import diplomacy.entity.Message;
-import diplomacy.entity.MessageMeta;
-import diplomacy.entity.User;
 import diplomacy.entity.status.MessageStatus;
 import diplomacy.entity.status.MessageType;
 import diplomacy.service.MessageService;
@@ -113,6 +110,12 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
     public PagerBean<Message> listOutboxByPage(User user, int page, int size) {
         page = page <= 0 ? 1 : page;
         return messageDao.listMessageBySender(user, (page - 1) * size, size);
+    }
+
+    @Override
+    public PagerBean<MessageBox> listInboxByPage(User user, int page, int size) {
+        page = page <= 0 ? 1 : page;
+        return messageDao.listMessageBoxByReceiver(user, (page - 1) * size, size);
     }
 
     private User getMultiMessageReceiver(String perm) {

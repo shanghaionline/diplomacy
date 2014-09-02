@@ -111,11 +111,36 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         return ret;
     }
 
+    @Override
+    public PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit) {
+        PagerBean<MessageBox> ret = new PagerBean<>();
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = queryCriteriaMessageBoxByReceiver(user);
+        DetachedCriteria countCriteria = queryCriteriaMessageBoxByReceiver(user);
+        criteria.addOrder(Property.forName("id").desc());
+        countCriteria.setProjection(Projections.rowCount());
+        ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
+        @SuppressWarnings("unchecked")
+        List<MessageBox> list = (List<MessageBox>)template.findByCriteria(criteria, offset, limit);
+        ret.setList(list);
+        ret.setStart(offset);
+        ret.setSize(limit);
+        return ret;
+    }
+
+    private DetachedCriteria queryCriteriaMessageBoxByReceiver(User user) {
+        DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
+        criteria.add(Restrictions.eq("receiver", user));
+        criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
+        return criteria;
+    }
+
     private DetachedCriteria queryCriteriaMessageBySender(User user) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
         criteria.add(Restrictions.eq("sender", user));
         criteria.add(Restrictions.or(Restrictions.eq("msgType", MessageType.SINGLEMSG),
                 Restrictions.eq("msgType", MessageType.MULTIPLE)));
+        criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
         return criteria;
     }
 
