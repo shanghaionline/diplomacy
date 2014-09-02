@@ -53,10 +53,17 @@
 	<tr>
 	  <th class="tcheck"></th>
 	  <th>标题</th>
-	  <th class="tsource">发件人</th>
+	  <th class="tsource">收件人</th>
 	  <th class="ttime">发送时间</th>
 	</tr>
-	
+    <#list boxList.list as item>
+    <tr>
+        <td><input type="checkbox"/></td>
+        <td>${item.title}</td>
+        <td>${item.receiver.login}</td>
+        <td>${item.created?string}</td>
+    </tr>
+    </#list>
 	<tr>
 	  <td colspan="4" class="access">
 	    <input type="submit" id="button" class="btn_delete" value=""/>
@@ -64,7 +71,9 @@
 	</tr>
 	<tr>
 	  <td colspan="4" class="pswitch">
-	    
+	    <#list 1..boxList.page as pg>
+	        <span><a href="${requestContext.contextPath}/message/outbox/${pg}">${pg}</a></span>
+	    </#list>
 	  </td>
 	</tr>
       </table>

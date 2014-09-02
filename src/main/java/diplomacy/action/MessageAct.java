@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -51,11 +52,12 @@ public class MessageAct {
 		return "message/inbox";
 	}
 	
-	@RequestMapping(value="/outbox")
-	String outbox(ModelMap model){
+	@RequestMapping(value="/outbox/{page}")
+	String outbox(ModelMap model, @PathVariable int page){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
+        model.addAttribute("boxList", messageService.listOutboxByPage(user, page, 20));
 		return "message/outbox";
 	}
 	
