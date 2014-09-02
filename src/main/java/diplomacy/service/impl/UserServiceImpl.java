@@ -48,7 +48,25 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
+    @Override
+    @Transactional(readOnly = false)
+    public User createSystem(String login, String perm) {
+        User user = new User();
+        user.setLogin(login);
+        user.setNicename(login);
+        user.setPasswd(PasswordUtil.password());
+        user.setRegistered(new Date());
+        user.setStatus(UserStatus.SYSTEM);
+        user.setPhone("");
+        user.setEmail("");
+        user.setGroup("");
+        userDao.save(user);
+        userDao.setUserMeta(user, new UserMeta("MULTIPLE_RECEIVER_GROUP", "PERM_MESSAGE_MEMBER"));
+        userDao.refresh(user);
+        return user;
+    }
+
+    @Override
 	public List<User> listUserByPerm(String perm) {
 		return userDao.listUserByMeta(perm, "PERM_ENABLED");
 	}
@@ -154,6 +172,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(readOnly = false)
 	public User refreshGroup(User user) {
 		String group = user.getGroup();
+        if (group == null || group.isEmpty()) return user;
 		Set<String> perms = perms(GROUP_PERMS.get(group));
 		Set<String> unperms = perms(PERMISSIONS);
 		unperms.removeAll(perms);

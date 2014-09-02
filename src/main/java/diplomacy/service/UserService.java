@@ -8,6 +8,7 @@ import diplomacy.entity.status.UserStatus;
 
 public interface UserService {
 	User create(String login, String password, UserStatus status);
+    User createSystem(String login, String perm);
 	List<User> listUserByPerm(String perm);
 	User handleInvited(Long inviterId, String nicename, String phone, String email);
 	String postInvited(User user);

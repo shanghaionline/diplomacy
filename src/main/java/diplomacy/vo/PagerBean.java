@@ -9,7 +9,8 @@ public class PagerBean<T> {
 	private int size;
 
     public int getPage() {
-        return (int)allCount / size + ((int)allCount % size != 0 ? 1 : 0);
+        int ret = (int)allCount / size + ((int)allCount % size != 0 ? 1 : 0);
+        return ret == 0 ? 1 : ret;
     }
 
 	public List<T> getList() {

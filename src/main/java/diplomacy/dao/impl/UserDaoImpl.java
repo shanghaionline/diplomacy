@@ -62,17 +62,22 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
 	@Override
 	public List<User> listUserByMeta(String key, String value) {
-		HibernateTemplate template = getHibernateTemplate();
-		DetachedCriteria w = DetachedCriteria.forClass(UserMeta.class);
-		w.add(Restrictions.eq("key", key));
-		w.add(Restrictions.eq("value", value));
-		w.setProjection(Projections.property("id"));
-		DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
-		criteria.add(Subqueries.exists(w));
-		criteria.add(Restrictions.eq("status", UserStatus.ENABLED));
-		@SuppressWarnings("unchecked")
-		List<User> ret = (List<User>)template.findByCriteria(criteria);
-		return ret;
+		return listUserByMeta(UserStatus.ENABLED, key, value);
 	}
-	
+
+    @Override
+    public List<User> listUserByMeta(UserStatus status, String key, String value) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria w = DetachedCriteria.forClass(UserMeta.class);
+        w.add(Restrictions.eq("key", key));
+        w.add(Restrictions.eq("value", value));
+        w.setProjection(Projections.property("id"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+        criteria.add(Subqueries.exists(w));
+        criteria.add(Restrictions.eq("status", status));
+        @SuppressWarnings("unchecked")
+        List<User> ret = (List<User>)template.findByCriteria(criteria);
+        return ret;
+    }
+
 }

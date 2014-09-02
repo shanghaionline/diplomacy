@@ -4,6 +4,7 @@ import java.util.List;
 
 import diplomacy.entity.User;
 import diplomacy.entity.UserMeta;
+import diplomacy.entity.status.UserStatus;
 
 public interface UserDao {
 	void save(User user);
@@ -13,4 +14,5 @@ public interface UserDao {
 	User getUserById(Long id);
 	void setUserMeta(User user, UserMeta meta);
 	List<User> listUserByMeta(String key, String value);
+    List<User> listUserByMeta(UserStatus status, String key, String value);
 }

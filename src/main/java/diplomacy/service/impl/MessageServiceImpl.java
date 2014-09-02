@@ -2,10 +2,12 @@ package diplomacy.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletContext;
 
+import diplomacy.entity.status.UserStatus;
 import diplomacy.vo.PagerBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,6 +96,7 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 		Message msg = new Message();
 		msg.setMsgType(MessageType.MULTIPLE);
 		msg.setSender(sender);
+        msg.setReceiver(getMultiMessageReceiver(perm));
 		msg.setTitle(title);
 		msg.setContent(content);
 		msg.setStatus(MessageStatus.READED);
@@ -110,6 +113,12 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
     public PagerBean<Message> listOutboxByPage(User user, int page, int size) {
         page = page <= 0 ? 1 : page;
         return messageDao.listMessageBySender(user, (page - 1) * size, size);
+    }
+
+    private User getMultiMessageReceiver(String perm) {
+        List<User> list = userDao.listUserByMeta(UserStatus.SYSTEM, "MULTIPLE_RECEIVER_GROUP", perm);
+        if(list.isEmpty()) return null;
+        return list.get(0);
     }
 
     private Attachment putAttachment(Message message, MultipartFile attachment) {

@@ -114,7 +114,8 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
     private DetachedCriteria queryCriteriaMessageBySender(User user) {
         DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
         criteria.add(Restrictions.eq("sender", user));
-        criteria.add(Restrictions.eq("msgType", MessageType.SINGLEMSG));
+        criteria.add(Restrictions.or(Restrictions.eq("msgType", MessageType.SINGLEMSG),
+                Restrictions.eq("msgType", MessageType.MULTIPLE)));
         return criteria;
     }
 

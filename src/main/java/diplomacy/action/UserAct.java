@@ -24,6 +24,7 @@ public class UserAct {
 	@RequestMapping("/init")
 	public String init() {
 		userService.create("admin", "admin", UserStatus.ENABLED);
+        userService.createSystem("会员", "PERM_MESSAGE_MEMBER");
 		return "index";
 	}
 	@RequestMapping("/groupfresh")
