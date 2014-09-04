@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import diplomacy.entity.*;
 import diplomacy.entity.status.UserStatus;
 import diplomacy.vo.PagerBean;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.ServletContextAware;
@@ -148,6 +149,23 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 			return "";
 		}
 		return filename.substring(e);
+	}
+
+	
+	@Override
+	public Message readMessage(User user, long msgId) {
+		Message msg = messageDao.getMessageById(msgId);
+		if(msg == null || !msg.getSender().getId().equals(user.getId()))
+			return null;
+		return msg;
+	}
+	
+	
+
+	@Override
+	public Message receiveMessage(User user, long msgId) {
+		
+		return null;
 	}
 
 	private String makeValidCode() {

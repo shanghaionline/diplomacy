@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import diplomacy.entity.Message;
 import diplomacy.entity.User;
 import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
@@ -24,7 +25,7 @@ public class MessageAct {
 	private UserService userService;
 	@RequestMapping(value = "/sendvalidcode")
 	@ResponseBody
-	Map<String, String> sendValidCode(String phone) {
+	public Map<String, String> sendValidCode(String phone) {
 		Map<String, String> ret = new HashMap<String, String>();
 		messageService.sendPhoneValidCode(phone);
 		ret.put("msg", "success");
@@ -33,7 +34,7 @@ public class MessageAct {
 	}
 	
 	@RequestMapping(value= "/sendmessage", method = RequestMethod.POST)
-	String sendMessage(ModelMap model, String receiver, String perm, String title, String content, 
+	public String sendMessage(ModelMap model, String receiver, String perm, String title, String content, 
 			MultipartFile attachment){
 		User sender = userService.perm((Long)model.get("SessionUserId"));
 		if (sender == null) return "";
@@ -42,11 +43,11 @@ public class MessageAct {
 		} else {
 			messageService.sendMultipleMessage(sender, perm, title, content, attachment);
 		}
-		return "message/inbox";
+		return "redirect:/message/inbox";
 	}
 	
 	@RequestMapping(value="/inbox/{page}")
-	String inbox(ModelMap model, @PathVariable int page){
+	public String inbox(ModelMap model, @PathVariable int page){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
@@ -55,7 +56,7 @@ public class MessageAct {
 	}
 	
 	@RequestMapping(value="/outbox/{page}")
-	String outbox(ModelMap model, @PathVariable int page){
+	public String outbox(ModelMap model, @PathVariable int page){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
@@ -64,12 +65,32 @@ public class MessageAct {
 	}
 	
 	@RequestMapping(value="/sendmessage", method = RequestMethod.GET)
-	String sendMessagePage(ModelMap model){
+	public String sendMessagePage(ModelMap model){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
 		return "message/sendmessage";
 	}
+	
+	@RequestMapping(value="/showmsg/{msgId}")
+	public String showMsg(ModelMap model, @PathVariable long msgId){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		Message msg = messageService.readMessage(user, msgId);
+		if(msg == null) return "common/error";
+		model.addAttribute("message", msg);
+		return "message/showmsg";
+	}
+	
+	@RequestMapping(value="/showreceive/{msgId}")
+	public String showReceive(ModelMap model, @PathVariable long msgId){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		return "message/showreceive";
+	}
+	
 	
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;

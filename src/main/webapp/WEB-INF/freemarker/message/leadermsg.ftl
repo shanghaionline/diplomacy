@@ -101,27 +101,9 @@ $(document).ready(function() {
     </td>
   </tr>
 </table>
-
 </form>
-
 </div>
-
-	    
-            
-<div class="login_right">
-  <div class="user_info">
-    <p>用户${user.login}，欢迎您登录</p>
-    <input type="submit" 
-	   name="button" 
-	   id="button" 
-	   value="退出" 
-	   class="btn_logout"
-	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
-  </div>
-  <div class="interactive">
-    <#include "../include/right_include.ftl">
-  </div>
-</div>
+<#include "../include/right_include.ftl">
 	  </div>
 	  <div class="bottom">
 	    <p>上海公共外交协会 版权所有 | 网络技术支持：

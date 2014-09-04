@@ -98,7 +98,7 @@ public class UserAct {
 			return "user/login";
 		}
 		model.addAttribute("SessionUserId", user.getId());
-		return "redirect:/message/inbox";
+		return "redirect:/message/inbox/1";
 	}
 	
 	@RequestMapping("apply-invitation")
@@ -164,7 +164,6 @@ public class UserAct {
 		model.addAttribute("user", user);
 		return "user/modifyphone";
 	}
-	
 
 	@RequestMapping(value="/select-user/q{query}/{page}")
 	public String selectUser(ModelMap model, @PathVariable String query, @PathVariable Integer page){

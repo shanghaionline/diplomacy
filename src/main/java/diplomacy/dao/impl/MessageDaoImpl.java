@@ -144,4 +144,31 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         return criteria;
     }
 
+
+	@Override
+	public MessageBox getMessageBoxById(int id) {
+		HibernateTemplate template = getHibernateTemplate();
+		DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
+		criteria.add(Restrictions.eq("id", id));
+		criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
+		@SuppressWarnings("unchecked")
+	    List<MessageBox> list = (List<MessageBox>)template.findByCriteria(criteria, 0, 1);
+		if(list.isEmpty()) return null;
+		return list.get(0);
+	}
+
+
+	@Override
+	public Message getMessageById(long id) {
+		HibernateTemplate template = getHibernateTemplate();
+		DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
+		criteria.add(Restrictions.eq("id", id));
+		criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
+		@SuppressWarnings("unchecked")
+	    List<Message> list = (List<Message>)template.findByCriteria(criteria, 0, 1);
+		if(list.isEmpty()) return null;
+		return list.get(0);
+	}
+    
+    
 }

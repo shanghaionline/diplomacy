@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="上海公共外交协会,公共外交,外交协会" />
-    <title>上海公共外交协会 收件箱</title>
+    <title>上海公共外交协会 查看消息</title>
     <link rel="stylesheet" media="screen" 
 	  href="${requestContext.contextPath}/static/stylesheets/main.css">
     <link rel="shortcut icon" type="image/png" 
@@ -26,62 +26,39 @@
 	<#include "../include/top_include.ftl"/>
 	<div class="content">
 	  <div class="main">
-	    
 <div class="login_left">
-<div class="sendmsg">
-  <a href="${requestContext.contextPath}/message/sendmessage">
-    <img src="${requestContext.contextPath}/static/images/btn_sendmsg.gif"
-	 alt="发送新消息"/>
-  </a>
-</div>
-<div class="mailbox">
-  <ul id="a2">
-    <li class="style1">
-      <a href="${requestContext.contextPath}/message/inbox/1">收件箱</a>
-    </li>
-    <li class="style2">
-      <a href="${requestContext.contextPath}/message/outbox/1">发件箱</a>
-    </li>
-  </ul>
-  <div id="b2">
-    <div class="maillist">
-       
-
-<form action="/association/msg/delete-send" method="POST" >
-    
-     <table>
-	<tr>
-	  <th class="tcheck"></th>
-	  <th>标题</th>
-	  <th class="tsource">收件人</th>
-	  <th class="ttime">发送时间</th>
-	</tr>
-    <#list boxList.list as item>
-    <tr>
-        <td><input type="checkbox"/></td>
-        <td><a href="${requestContext.contextPath}/message/showmsg/${item.id}">${item.title}</a></td>
-        <td>${item.receiver.login}</td>
-        <td>${item.created?string}</td>
-    </tr>
-    </#list>
-	<tr>
-	  <td colspan="4" class="access">
-	    <input type="submit" id="button" class="btn_delete" value=""/>
-	  </td>
-	</tr>
-	<tr>
-	  <td colspan="4" class="pswitch">
-	    <#list 1..boxList.page as pg>
-	        <span><a href="${requestContext.contextPath}/message/outbox/${pg}">${pg}</a></span>
-	    </#list>
-	  </td>
-	</tr>
-      </table>
-      
-</form>
-
-    </div>
-  </div>
+<table width="100%" border="0">
+  <tr>
+    <td width="15%" align="left">发件人</td>
+    <td align="left">${message.sender.login}</td>
+  </tr>
+  <tr>
+    <td align="left">收件人</td>
+    <td align="left">${message.receiver.login}</td>
+  </tr>
+  <tr>
+    <td align="left">标题</td>
+    <td align="left">${message.title}</td>
+  </tr>
+  <tr>
+    <td align="left">发送时间</td>
+    <td align="left">${message.created?string}</td>
+  </tr>
+  <tr>
+    <td align="left">内容</td>
+    <td align="left">${message.content}</td>
+  </tr>
+  
+  <tr>
+    <td align="left">附件</td>
+    <td align="left">
+      <a href="/association/msg/down-attachment/8">中文附件名测试.txt</a>
+    </td>
+  </tr>
+  
+</table>
+<div>
+  <a href="${requestContext.contextPath}/message/outbox/1">返回</a>
 </div>
 </div>
 <#include "../include/right_include.ftl">

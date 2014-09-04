@@ -18,4 +18,6 @@ public interface MessageDao {
 	Attachment putAttachment(Attachment attachment);
     PagerBean<Message> listMessageBySender(User user, int offset, int limit);
     PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit);
+    MessageBox getMessageBoxById(int id);
+    Message getMessageById(long id);
 }

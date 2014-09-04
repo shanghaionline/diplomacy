@@ -36,10 +36,10 @@
 <div class="mailbox">
   <ul id="a2">
     <li class="style2">
-      <a href="${requestContext.contextPath}/message/inbox">收件箱</a>
+      <a href="${requestContext.contextPath}/message/inbox/1">收件箱</a>
     </li>
     <li class="style1">
-      <a href="${requestContext.contextPath}/message/outbox">发件箱</a>
+      <a href="${requestContext.contextPath}/message/outbox/1">发件箱</a>
     </li>
   </ul>
   <div id="b2">
@@ -56,7 +56,11 @@
     <tr>
       <td><input type="checkbox"/></td>
       <td>
-      ${item.message.title}
+      <#if item.status == "UNREAD">
+      <b><a href="${requestContext.contextPath}/message/showreceive/${item.message.id}">${item.message.title}</a></b>
+      <#else>
+	  <a href="${requestContext.contextPath}/message/showreceive/${item.message.id}">${item.message.title}</a>
+      </#if>
       </td>
       <td>${item.receiver.login}</td>
       <td>${item.message.created?string}</td>
@@ -83,18 +87,7 @@
   </div>
 </div>
 </div>
-<div class="login_right">
-  <div class="user_info">
-    <p>用户${user.login}，欢迎您登录</p>
-    <input type="submit" 
-	   name="button" 
-	   id="button" 
-	   value="退出" 
-	   class="btn_logout"
-	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
-  </div>
-    <#include "../include/right_include.ftl">
-</div>
+<#include "../include/right_include.ftl">
 	  </div>
 	  <div class="bottom">
 	    <p>上海公共外交协会 版权所有 | 网络技术支持：

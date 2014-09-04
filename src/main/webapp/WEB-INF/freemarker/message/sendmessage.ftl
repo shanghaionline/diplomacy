@@ -47,7 +47,7 @@ $(document).ready(function() {
 
  
 
-<form action="/association/msg/send-message" method="POST" enctype="multipart/form-data" id="fm">
+<form action="${requestContext.contextPath}/message/sendmessage" method="POST" enctype="multipart/form-data" id="fm">
 <table width="100%" board="0">
   <tr>
     <td width="15%">收件人:</td>
@@ -64,7 +64,7 @@ $(document).ready(function() {
   <tr>
     <td>&nbsp;</td>
     <td align="left">
-      <select id="group_id_select" name="groupid">
+      <select id="group_id_select" name="perm">
 	<option value="">单会员</option><option value="1">会员</option><option value="2">理事</option><option value="3">会长</option>
       </select>
       <span></span>
@@ -92,7 +92,7 @@ $(document).ready(function() {
   <tr>
     <td>附&nbsp;&nbsp;件</td>
     <td align="left">
-      <input type="file" name="attach"/>
+      <input type="file" name="attachment"/>
     </td>
   <tr>
     <td colspan="2" align="center">
@@ -105,23 +105,7 @@ $(document).ready(function() {
 </form>
 
 </div>
-
-	    
-            
-<div class="login_right">
-  <div class="user_info">
-    <p>用户${user.login}，欢迎您登录</p>
-    <input type="submit" 
-	   name="button" 
-	   id="button" 
-	   value="退出" 
-	   class="btn_logout"
-	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
-  </div>
-  <div class="interactive">
-    <#include "../include/right_include.ftl">
-  </div>
-</div>
+<#include "../include/right_include.ftl">
 	  </div>
 	  <div class="bottom">
 	    <p>上海公共外交协会 版权所有 | 网络技术支持：
