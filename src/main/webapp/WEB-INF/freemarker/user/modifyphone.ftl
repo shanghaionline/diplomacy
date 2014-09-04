@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="上海公共外交协会,公共外交,外交协会" />
-    <title>上海公共外交协会 邀请注册</title>
+    <title>上海公共外交协会 修改密码</title>
     <link rel="stylesheet" media="screen" 
 	  href="${requestContext.contextPath}/static/stylesheets/main.css">
     <link rel="shortcut icon" type="image/png" 
@@ -23,46 +23,54 @@
 	  <div class="flash">
 	  </div>
 	</div>
-	<#include "../include/top_include.ftl">
+	<#include "../include/top_include.ftl"/>
 	<div class="content">
 	  <div class="main">
-	  <form method="POST" >
-	  <table width="30%" border="0" align="center">
-	  <tr>
-	  	<td width="50%" align="left">姓&nbsp;&nbsp;名:</td>
-	  	<td align="left">
-	  		<input type="textfield" id="name" name="nicename" value="${nicename!}" class="ipt_1"/>
-	  		<span></span>
-	  	</td>
-	  </tr>
-	  <tr>
-	  	<td width="50%" align="left">手机号码:</td>
-	  	<td align="left">
-	  		<input type="textfield" id="name" name="phone" value="${phone!}" class="ipt_1"/><input type="button" value="发送验证码"/>
-      	<span></span>
-     	</td>
-      </tr>
-      <tr>
-	  	<td width="50%" align="left">验证码:</td>
-	  	<td align="left">
-	  		<input type="textfield" id="name" name="code" class="ipt_1"/>
-	  		<span>${errCodeMsg!}</span>
-	  	</td>
-	  </tr>
-      <tr>
-      	<td width="50%" align="left">email:</td>
-      	<td align="left">
-      		<input type="textfield" id="name" name="email" value="${email!}" class="ipt_1"/>
-      	<span></span>
-      	</td>
-      </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <input type="submit" value="确定"/>
-    </td>
-  </tr>
-</table>
+<div class="login_left">
+<form action="${requestContext.contextPath}/user/modifypwd" method="POST" >
+  <table width="100%" border="0" cellpadding="2">
+    <tr>
+      <td width="35%"></td>
+      <td align="left">新手机:</td>
+      <td>
+		<input type="textfield" id="name" name="phone" value="${user.phone}" class="ipt_1"/>
+		<input type="button" value="发送验证码"/>
+		<span>${errorMsg!}</span>
+      </td>
+    </tr>
+    <tr>
+	  <td width="35%"></td>
+	  <td align="left">验证码:</td>
+	  <td>
+	  	<input type="textfield" id="name" name="code" class="ipt_1"/>
+	  	<span>${errCodeMsg!}</span>
+	  </td>
+	</tr>
+    <tr>
+      <td colspan="3" align="center">
+	<input type="submit" id="edit" value="确定"/>
+      </td>
+    </tr>
+  </table>
+  
 </form>
+
+</div>
+
+	    
+            
+<div class="login_right">
+  <div class="user_info">
+    <p>用户${user.login}，欢迎您登录</p>
+    <input type="submit" 
+	   name="button" 
+	   id="button" 
+	   value="退出" 
+	   class="btn_logout"
+	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
+  </div>
+    <#include "../include/right_include.ftl">
+</div>
 	  </div>
 	  <div class="bottom">
 	    <p>上海公共外交协会 版权所有 | 网络技术支持：
@@ -78,3 +86,5 @@
     </div>
   </body>
 </html>
+
+

@@ -121,6 +121,49 @@ public class UserAct {
 		return "index";
 	}
 	
+	@RequestMapping(value = "/modify", method = RequestMethod.GET)
+	public String modify(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if (user == null) return "common/error";
+		model.addAttribute("user", user);
+		String checksum = PasswordUtil.invateHash(user.getId());
+		model.addAttribute("checksum", checksum);
+		return "user/modify";
+	}
+	
+	@RequestMapping(value="/modifypwd", method = RequestMethod.GET)
+	String modifypwdpage(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		return "user/modifypwd";
+	}
+	
+	@RequestMapping(value = "/modifypwd", method = RequestMethod.POST)	
+	public String modifypwd(String oldpassword, String password, ModelMap model) {
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "redirect:/user/login";
+		model.addAttribute("user", user);
+		if (oldpassword == null || oldpassword.trim().isEmpty() ||
+			password == null || password.trim().isEmpty()) {
+			model.addAttribute("errorMsg", "密码不能为空");
+			return "user/modifypwd";
+		}
+		if(userService.changePassword(user, oldpassword, password) == null){
+			model.addAttribute("errorMsg", "密码错误");
+			return "user/modifypwd";
+		}
+		return "redirect:/user/modify";
+	}
+	
+	@RequestMapping(value="/modifyphone", method = RequestMethod.GET)
+	String modifyphonepage(ModelMap model){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		model.addAttribute("user", user);
+		return "user/modifyphone";
+	}
+	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}

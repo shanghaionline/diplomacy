@@ -21,4 +21,5 @@ public interface UserService {
 	User refreshGroup(User user);
 	Set<String> perms(String... perms);
 	User putPerms(User user, boolean enabled, Set<String> perms);
+	User changePassword(User user, String oldpassword, String password);
 }

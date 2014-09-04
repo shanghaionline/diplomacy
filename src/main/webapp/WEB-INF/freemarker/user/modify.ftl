@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="上海公共外交协会,公共外交,外交协会" />
-    <title>上海公共外交协会 收件箱</title>
+    <title>上海公共外交协会 修改用户信息</title>
     <link rel="stylesheet" media="screen" 
 	  href="${requestContext.contextPath}/static/stylesheets/main.css">
     <link rel="shortcut icon" type="image/png" 
@@ -26,66 +26,57 @@
 	<#include "../include/top_include.ftl"/>
 	<div class="content">
 	  <div class="main">
+	    
 <div class="login_left">
-<div class="sendmsg">
-  <a href="${requestContext.contextPath}/message/sendmessage">
-    <img src="${requestContext.contextPath}/static/images/btn_sendmsg.gif"
-	 alt="发送新消息"/>
-  </a>
-</div>
-<div class="mailbox">
-  <ul id="a2">
-    <li class="style2">
-      <a href="${requestContext.contextPath}/message/inbox">收件箱</a>
-    </li>
-    <li class="style1">
-      <a href="${requestContext.contextPath}/message/outbox">发件箱</a>
-    </li>
-  </ul>
-  <div id="b2">
-    <div class="maillist">
-       
-
-<form action="/association/msg/delete-receive" method="POST" >
-    
-      <table>
-	<tr>
-	  <th class="tcheck"></th>
-	  <th>标题</th>
-	  <th class="tsource">发件人</th>
-	  <th class="ttime">发送时间</th>
-	</tr>
-
-    <#list boxList.list as item>
+<form action="/association/user/edit-info" method="POST" >
+  <table width="100%" border="0" cellpadding="2">
     <tr>
-      <td><input type="checkbox"/></td>
-      <td>
-      ${item.message.title}
+      <td width="35%"></td>
+      <td width="12%" align="left">会员帐号:</td>
+      <td align="left">
+		${user.login}
       </td>
-      <td>${item.receiver.login}</td>
-      <td>${item.message.created?string}</td>
     </tr>
-    </#list>
-	
-	<tr>
-	  <td colspan="4" class="access">
-	    <input type="submit" id="button" class="btn_delete" value=""/>
-	  </td>
-	</tr>
-	<tr>
-	  <td colspan="4" class="pswitch">
-      <#list 1..boxList.page as pg>
-         <span><a href="${requestContext.contextPath}/message/inbox/${pg}">${pg}</a></span>
-      </#list>
-	  </td>
-	</tr>
-      </table>
-      
+    <tr>
+      <td width="10%"></td>
+      <td align="left">会员姓名:</td>
+      <td>
+	<input type="textfield" id="name" name="realname"
+	       value="${user.nicename}" class="ipt_1"/>
+	<span></span>
+      </td>
+    </tr>
+    <tr>
+      <td width="10%"></td>
+      <td align="left">会员手机:</td>
+      <td>
+	<input type="textfield" id="name" name="phone"
+	       value="${user.phone}" class="ipt_1"/>
+	<span></span>
+      </td>
+    </tr>
+    <tr>
+      <td width="10%"></td>
+      <td align="left">邮箱地址:</td>
+      <td>
+	<input type="textfield" id="name" name="email"
+	       value="${user.email}" class="ipt_1"/>
+	<span></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+	<a href="${requestContext.contextPath}/user/modifypwd">修改密码</a>&nbsp;
+	<a href="${requestContext.contextPath}/user/modifyphone">修改手机</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" align="center">
+	<input type="submit" id="add" name="add" value="确定"/>
+      </td>
+    </tr>
+  </table>
 </form>
-
-    </div>
-  </div>
-</div>
 </div>
 <div class="login_right">
   <div class="user_info">
@@ -97,7 +88,7 @@
 	   class="btn_logout"
 	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
   </div>
-    <#include "../include/right_include.ftl">
+ <#include "../include/right_include.ftl">
 </div>
 	  </div>
 	  <div class="bottom">
@@ -114,6 +105,5 @@
     </div>
   </body>
 </html>
-
 
 

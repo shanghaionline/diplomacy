@@ -84,9 +84,6 @@
   </div>
 </div>
 </div>
-
-	    
-            
 <div class="login_right">
   <div class="user_info">
     <p>用户${user.login}，欢迎您登录</p>
@@ -99,9 +96,6 @@
   </div>
   <#include "../include/right_include.ftl">
 </div>
-
-
-            
 	  </div>
 	  <div class="bottom">
 	    <p>上海公共外交协会 版权所有 | 网络技术支持：

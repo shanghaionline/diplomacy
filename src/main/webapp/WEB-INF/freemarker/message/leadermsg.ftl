@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="keywords" content="上海公共外交协会,公共外交,外交协会" />
-    <title>上海公共外交协会 收件箱</title>
+    <title>上海公共外交协会 发送短信</title>
     <link rel="stylesheet" media="screen" 
 	  href="${requestContext.contextPath}/static/stylesheets/main.css">
     <link rel="shortcut icon" type="image/png" 
@@ -26,67 +26,88 @@
 	<#include "../include/top_include.ftl"/>
 	<div class="content">
 	  <div class="main">
+	    
 <div class="login_left">
-<div class="sendmsg">
-  <a href="${requestContext.contextPath}/message/sendmessage">
-    <img src="${requestContext.contextPath}/static/images/btn_sendmsg.gif"
-	 alt="发送新消息"/>
-  </a>
-</div>
-<div class="mailbox">
-  <ul id="a2">
-    <li class="style2">
-      <a href="${requestContext.contextPath}/message/inbox">收件箱</a>
-    </li>
-    <li class="style1">
-      <a href="${requestContext.contextPath}/message/outbox">发件箱</a>
-    </li>
-  </ul>
-  <div id="b2">
-    <div class="maillist">
-       
+<script>
+function show_contact_list() {
+  open("/association/user/list-contact/q/1","",
+    "resizable=1,scrollbars=1,status=no,toolbar=no,menu=no,width=500,height=400,left=150,top=50");
+}
+$(document).ready(function() {
+  $("#group_id_select").bind("change", function() {
+    var $v = $("#group_id_select option:selected")
+    if ($v.val() == "") {
+      $("#message_receiver_value").val("")
+    } else {
+      $("#message_receiver_value").val($v.text())
+    }
+  })
+});
+</script>
 
-<form action="/association/msg/delete-receive" method="POST" >
-    
-      <table>
-	<tr>
-	  <th class="tcheck"></th>
-	  <th>标题</th>
-	  <th class="tsource">发件人</th>
-	  <th class="ttime">发送时间</th>
-	</tr>
+ 
 
-    <#list boxList.list as item>
-    <tr>
-      <td><input type="checkbox"/></td>
-      <td>
-      ${item.message.title}
-      </td>
-      <td>${item.receiver.login}</td>
-      <td>${item.message.created?string}</td>
-    </tr>
-    </#list>
-	
-	<tr>
-	  <td colspan="4" class="access">
-	    <input type="submit" id="button" class="btn_delete" value=""/>
-	  </td>
-	</tr>
-	<tr>
-	  <td colspan="4" class="pswitch">
-      <#list 1..boxList.page as pg>
-         <span><a href="${requestContext.contextPath}/message/inbox/${pg}">${pg}</a></span>
-      </#list>
-	  </td>
-	</tr>
-      </table>
-      
+<form action="/association/msg/send-message" method="POST" enctype="multipart/form-data" id="fm">
+<table width="100%" board="0">
+  <tr>
+    <td width="15%">收件人:</td>
+    <td align="left">
+      <input type="textfield" id="message_receiver_value"
+	     class="ipt_1" 
+	     name="receiver"
+	     value=""/>
+      <input type="button" value="选择" onClick="show_contact_list()"/>
+      <span></span>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>&nbsp;</td>
+    <td align="left">
+      <select id="group_id_select" name="groupid">
+	<option value="">单会员</option><option value="1">会员</option><option value="2">理事</option><option value="3">会长</option>
+      </select>
+      <span></span>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>标&nbsp;&nbsp;题:</td>
+    <td align="left">
+      <input type="textfield" 
+	     class="ipt_1"
+	     name="title"
+	     value=""/>
+      <span></span>
+    </td>
+  </tr>
+  <tr>
+    <td>内&nbsp;&nbsp;容</td>
+    <td align="left">
+      <textarea name="content"
+		rows="10" cols="50"></textarea>
+      <span></span>
+    </td>
+  </tr>
+  <tr>
+    <td>附&nbsp;&nbsp;件</td>
+    <td align="left">
+      <input type="file" name="attach"/>
+    </td>
+  <tr>
+    <td colspan="2" align="center">
+      <br/>
+      <input type="submit" value="发送短信"/>
+    </td>
+  </tr>
+</table>
+
 </form>
 
-    </div>
-  </div>
 </div>
-</div>
+
+	    
+            
 <div class="login_right">
   <div class="user_info">
     <p>用户${user.login}，欢迎您登录</p>
@@ -97,7 +118,9 @@
 	   class="btn_logout"
 	   onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
   </div>
+  <div class="interactive">
     <#include "../include/right_include.ftl">
+  </div>
 </div>
 	  </div>
 	  <div class="bottom">
@@ -114,6 +137,5 @@
     </div>
   </body>
 </html>
-
 
 

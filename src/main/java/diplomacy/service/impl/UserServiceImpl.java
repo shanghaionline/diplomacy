@@ -198,6 +198,16 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	
+	@Override
+	@Transactional(readOnly = false)
+	public User changePassword(User user, String oldpassword, String password) {
+		if(!PasswordUtil.check(user.getPasswd(), oldpassword)){
+			return null;
+		}
+		user.setPasswd(PasswordUtil.password(password));
+		userDao.save(user);
+		return user;
+	}
+
 	
 }
