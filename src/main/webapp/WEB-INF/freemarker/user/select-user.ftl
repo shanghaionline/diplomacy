@@ -20,7 +20,7 @@
     </script>
   </head>
   <body>
-    <input type="textfield" id="query_key" value=""/>
+    <input type="textfield" id="query" value="${query}"/>
     <a href="#" onClick="queryContact()">查询</a>
     <table width="300px" border="1">
       <tr>
@@ -28,28 +28,18 @@
 	<th>姓名</th>
 	<th>操作</th>
       </tr>
+      <#list userList.list as item>
       <tr>
-        <td>002</td>
-        <td>张治承</td> 
+        <td>${item.login}</td>
+        <td>${item.nicename}</td> 
         <td>
-          <a href="#" onClick="putContact('002')">选择</a>
+          <a href="#" onClick="putContact('${item.login}')">选择</a>
         </td>
       </tr>
-      <tr>
-        <td>001</td>
-        <td>冒霜霜</td> 
-        <td>
-          <a href="#" onClick="putContact('001')">选择</a>
-        </td>
-      </tr>
-      <tr>
-        <td>admin</td>
-        <td>admin</td> 
-        <td>
-          <a href="#" onClick="putContact('admin')">选择</a>
-        </td>
-      </tr>
+      </#list>
     </table>
-    <a href="/association/user/list-contact/q/1">1</a>
+    <#list 1..userList.page as pg>
+    <a href="${requestContext.contextPath}/user/select-user/q${query}/${pageNum}">${pg}</a>
+    </#list>
   </body>
 </html>

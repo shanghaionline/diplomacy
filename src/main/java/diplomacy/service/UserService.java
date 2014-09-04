@@ -5,11 +5,13 @@ import java.util.Set;
 
 import diplomacy.entity.User;
 import diplomacy.entity.status.UserStatus;
+import diplomacy.vo.PagerBean;
 
 public interface UserService {
 	User create(String login, String password, UserStatus status);
     User createSystem(String login, String perm);
 	List<User> listUserByPerm(String perm);
+	PagerBean<User> queryUser(String query, int page, int size);
 	User handleInvited(Long inviterId, String nicename, String phone, String email);
 	String postInvited(User user);
 	User passInvited(User admin, User user);

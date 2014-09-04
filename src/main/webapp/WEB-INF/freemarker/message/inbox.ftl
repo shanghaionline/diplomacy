@@ -44,10 +44,7 @@
   </ul>
   <div id="b2">
     <div class="maillist">
-       
-
 <form action="/association/msg/delete-receive" method="POST" >
-    
       <table>
 	<tr>
 	  <th class="tcheck"></th>
@@ -55,7 +52,6 @@
 	  <th class="tsource">发件人</th>
 	  <th class="ttime">发送时间</th>
 	</tr>
-
     <#list boxList.list as item>
     <tr>
       <td><input type="checkbox"/></td>

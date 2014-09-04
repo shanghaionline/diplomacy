@@ -18,6 +18,7 @@ import diplomacy.entity.UserMeta;
 import diplomacy.entity.status.UserStatus;
 import diplomacy.service.UserService;
 import diplomacy.util.PasswordUtil;
+import diplomacy.vo.PagerBean;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -69,6 +70,12 @@ public class UserServiceImpl implements UserService {
     @Override
 	public List<User> listUserByPerm(String perm) {
 		return userDao.listUserByMeta(perm, "PERM_ENABLED");
+	}
+    
+	@Override
+	public PagerBean<User> queryUser(String query, int page, int size) {
+		page = page <= 0 ? 1 : page;
+		return userDao.queryUser(query, (page - 1) * size, size);
 	}
 
 	public void setUserDao(UserDao userDao) {

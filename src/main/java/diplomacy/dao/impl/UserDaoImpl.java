@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.springframework.orm.hibernate4.HibernateTemplate;
@@ -14,6 +15,7 @@ import diplomacy.dao.UserDao;
 import diplomacy.entity.User;
 import diplomacy.entity.UserMeta;
 import diplomacy.entity.status.UserStatus;
+import diplomacy.vo.PagerBean;
 
 @Repository("userDao")
 public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
@@ -80,4 +82,31 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
         return ret;
     }
 
+	@Override
+	public PagerBean<User> queryUser(String query, int offset, int limit) {
+		PagerBean<User> ret = new PagerBean<User>();
+		HibernateTemplate template = getHibernateTemplate();
+		DetachedCriteria criteria = queryCriteriaUser(query);
+		DetachedCriteria countCriteria = queryCriteriaUser(query);
+		criteria.addOrder(Property.forName("login").asc());
+		countCriteria.setProjection(Projections.rowCount());
+		ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
+		@SuppressWarnings("unchecked")
+		List<User> list = (List<User>)template.findByCriteria(criteria, offset, limit);
+		ret.setList(list);
+        ret.setStart(offset);
+        ret.setSize(limit);
+		return ret;
+	}
+    
+    private DetachedCriteria queryCriteriaUser(String query) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
+    	if(query != null && !query.trim().isEmpty()) {
+    		criteria.add(Restrictions.or(Restrictions.like("login", "%" + query + "%"),
+        	Restrictions.like("nicename", "%" + query + "%")));
+    	}
+        criteria.add(Restrictions.eq("status", UserStatus.ENABLED));
+        return criteria;
+    }
+    
 }

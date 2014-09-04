@@ -30,7 +30,7 @@
 <div class="login_left">
 <script>
 function show_contact_list() {
-  open("/association/user/list-contact/q/1","",
+  open("${requestContext.contextPath}/user/select-user/q/1","",
     "resizable=1,scrollbars=1,status=no,toolbar=no,menu=no,width=500,height=400,left=150,top=50");
 }
 $(document).ready(function() {
