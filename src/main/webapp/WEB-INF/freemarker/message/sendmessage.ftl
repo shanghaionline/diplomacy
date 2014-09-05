@@ -55,7 +55,7 @@ $(document).ready(function() {
       <input type="textfield" id="message_receiver_value"
 	     class="ipt_1" 
 	     name="receiver"
-	     value=""/>
+	     value="${receiver!}"/>
       <input type="button" value="选择" onClick="show_contact_list()"/>
       <span></span>
     </td>

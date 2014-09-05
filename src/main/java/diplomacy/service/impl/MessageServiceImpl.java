@@ -163,9 +163,38 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 	
 
 	@Override
-	public Message receiveMessage(User user, long msgId) {
-		
-		return null;
+	@Transactional(readOnly = false)
+	public Message receiveMessage(User user, long msgId, boolean setReaded) {
+		MessageBox msgBox = messageDao.getMessageBoxById(msgId);
+		if(msgBox == null || !msgBox.getReceiver().getId().equals(user.getId()))
+			return null;
+		if(setReaded && msgBox.getStatus().equals(MessageStatus.UNREAD)) {
+			msgBox.setStatus(MessageStatus.READED);
+			messageDao.save(msgBox);
+		}
+		return msgBox.getMessage();
+	}
+	
+	
+
+	@Override
+	@Transactional(readOnly = false)
+	public void deleteMessage(User user, long[] ids) {
+		for(long id : ids){
+			Message msg = messageDao.getMessageById(id);
+			if(msg != null && msg.getSender().getId().equals(user.getId()))
+				messageDao.delete(msg);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public void deleteMessageBox(User user, long[] ids) {
+		for(long id : ids){
+			MessageBox msgBox = messageDao.getMessageBoxById(id);
+			if(msgBox != null && msgBox.getReceiver().getId().equals(user.getId()))
+				messageDao.delete(msgBox);
+		}
 	}
 
 	private String makeValidCode() {

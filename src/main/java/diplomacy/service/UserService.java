@@ -24,4 +24,6 @@ public interface UserService {
 	Set<String> perms(String... perms);
 	User putPerms(User user, boolean enabled, Set<String> perms);
 	User changePassword(User user, String oldpassword, String password);
+	User saveUserInfo(User user, String nicename, String email);
+	User changePhone(User user, String phone);
 }

@@ -1,6 +1,7 @@
 package diplomacy.entity;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ public class Message {
 	private String content;
 	private MessageStatus status;
 	private Date created;
+	private List<Attachment> attachments;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,6 +99,14 @@ public class Message {
 	}
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	
+	@OneToMany(mappedBy = "message")
+	public List<Attachment> getAttachments() {
+		return attachments;
+	}
+	public void setAttachments(List<Attachment> attachments) {
+		this.attachments = attachments;
 	}
 
 }

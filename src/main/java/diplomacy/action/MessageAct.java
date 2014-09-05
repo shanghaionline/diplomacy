@@ -37,13 +37,13 @@ public class MessageAct {
 	public String sendMessage(ModelMap model, String receiver, String perm, String title, String content, 
 			MultipartFile attachment){
 		User sender = userService.perm((Long)model.get("SessionUserId"));
-		if (sender == null) return "";
+		if (sender == null) return "common/error";
 		if (perm == null || perm.isEmpty()) {
 			messageService.sendSingleMessage(sender, receiver, title, content, attachment);
 		} else {
 			messageService.sendMultipleMessage(sender, perm, title, content, attachment);
 		}
-		return "redirect:/message/inbox";
+		return "redirect:/message/inbox/1";
 	}
 	
 	@RequestMapping(value="/inbox/{page}")
@@ -65,10 +65,11 @@ public class MessageAct {
 	}
 	
 	@RequestMapping(value="/sendmessage", method = RequestMethod.GET)
-	public String sendMessagePage(ModelMap model){
+	public String sendMessagePage(ModelMap model, String receiver){
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
+		if(receiver != null) model.addAttribute("receiver", receiver);
 		return "message/sendmessage";
 	}
 	
@@ -88,9 +89,28 @@ public class MessageAct {
 		User user = userService.perm((Long)model.get("SessionUserId"));
 		if(user == null) return "common/error";
 		model.addAttribute("user", user);
+		Message msg = messageService.receiveMessage(user, msgId, true);
+		if(msg == null) return "common/error";
+		model.addAttribute("message", msg);
 		return "message/showreceive";
 	}
 	
+	@RequestMapping(value="/inbox/delete")
+	public String deleteInbox(ModelMap model, long[] ids){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		if(ids != null) messageService.deleteMessageBox(user, ids);
+		return "redirect:/message/inbox/1";
+	}
+	
+	
+	@RequestMapping(value="/outbox/delete")
+	public String deleteOutbox(ModelMap model, long[] ids){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		if(ids != null) messageService.deleteMessage(user, ids);
+		return "redirect:/message/outbox/1";
+	}
 	
 	public void setMessageService(MessageService messageService) {
 		this.messageService = messageService;

@@ -18,5 +18,7 @@ public interface MessageService {
     PagerBean<Message> listOutboxByPage(User user, int page, int size);
     PagerBean<MessageBox> listInboxByPage(User user, int page, int size);
     Message readMessage(User user, long msgId);
-    Message receiveMessage(User user, long msgId);
+    Message receiveMessage(User user, long msgId, boolean setReaded);
+    void deleteMessage(User user, long[] ids);
+    void deleteMessageBox(User user, long[] ids);
 }

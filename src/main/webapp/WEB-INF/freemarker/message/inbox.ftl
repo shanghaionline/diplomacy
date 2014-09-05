@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="cn">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -44,7 +44,7 @@
   </ul>
   <div id="b2">
     <div class="maillist">
-<form action="/association/msg/delete-receive" method="POST" >
+<form action="${requestContext.contextPath}/message/inbox/delete" method="POST" >
       <table>
 	<tr>
 	  <th class="tcheck"></th>
@@ -54,12 +54,12 @@
 	</tr>
     <#list boxList.list as item>
     <tr>
-      <td><input type="checkbox"/></td>
+      <td><input type="checkbox" name="ids" value="${item.id}"/></td>
       <td>
       <#if item.status == "UNREAD">
-      <b><a href="${requestContext.contextPath}/message/showreceive/${item.message.id}">${item.message.title}</a></b>
+      <b><a href="${requestContext.contextPath}/message/showreceive/${item.id}">${item.message.title}</a></b>
       <#else>
-	  <a href="${requestContext.contextPath}/message/showreceive/${item.message.id}">${item.message.title}</a>
+	  <a href="${requestContext.contextPath}/message/showreceive/${item.id}">${item.message.title}</a>
       </#if>
       </td>
       <td>${item.receiver.login}</td>

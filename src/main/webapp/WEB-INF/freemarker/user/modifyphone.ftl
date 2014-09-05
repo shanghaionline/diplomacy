@@ -27,13 +27,13 @@
 	<div class="content">
 	  <div class="main">
 <div class="login_left">
-<form action="${requestContext.contextPath}/user/modifypwd" method="POST" >
+<form action="${requestContext.contextPath}/user/modifyphone" method="POST" >
   <table width="100%" border="0" cellpadding="2">
     <tr>
       <td width="35%"></td>
       <td align="left">新手机:</td>
       <td>
-		<input type="textfield" id="name" name="phone" value="${user.phone}" class="ipt_1"/>
+		<input type="textfield" id="name" name="phone" value="${phone!user.phone}" class="ipt_1"/>
 		<input type="button" value="发送验证码"/>
 		<span>${errorMsg!}</span>
       </td>
@@ -42,7 +42,7 @@
 	  <td width="35%"></td>
 	  <td align="left">验证码:</td>
 	  <td>
-	  	<input type="textfield" id="name" name="code" class="ipt_1"/>
+	  	<input type="textfield" id="name" name="code" class="ipt_1" value="${code!}"/>
 	  	<span>${errCodeMsg!}</span>
 	  </td>
 	</tr>

@@ -47,7 +47,7 @@
     <div class="maillist">
        
 
-<form action="/association/msg/delete-send" method="POST" >
+<form action="${requestContext.contextPath}/message/outbox/delete" method="POST" >
     
      <table>
 	<tr>
@@ -58,7 +58,7 @@
 	</tr>
     <#list boxList.list as item>
     <tr>
-        <td><input type="checkbox"/></td>
+        <td><input type="checkbox" name="ids" value="${item.id}"/></td>
         <td><a href="${requestContext.contextPath}/message/showmsg/${item.id}">${item.title}</a></td>
         <td>${item.receiver.login}</td>
         <td>${item.created?string}</td>

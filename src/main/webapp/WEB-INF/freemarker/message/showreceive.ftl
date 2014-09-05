@@ -30,37 +30,40 @@
 <table width="100%" border="0">
   <tr>
     <td width="15%" align="left">发件人</td>
-    <td align="left">admin</td>
+    <td align="left">${message.sender.login}</td>
   </tr>
   <tr>
     <td align="left">收件人</td>
-    <td align="left">admin</td>
+    <td align="left">${message.receiver.login}</td>
   </tr>
   <tr>
     <td align="left">标题</td>
-    <td align="left">test</td>
+    <td align="left">${message.title}</td>
   </tr>
   <tr>
     <td align="left">发送时间</td>
-    <td align="left">2014-02-28 15:17:00</td>
+    <td align="left">${message.created?string}</td>
   </tr>
   <tr>
     <td align="left">内容</td>
     <td align="left">
-      
+      ${message.content}
     </td>
   </tr>
   
   <tr>
     <td align="left">附件</td>
     <td align="left">
-      <a href="/association/msg/down-attachment/8">中文附件名测试.txt</a>
+    <#list message.attachments as item>
+      <a href="${requestContext.contextPath}${item.uri}">${item.name}</a>
+    </#list>
     </td>
   </tr>
   
 </table>
 <div>
   <a href="${requestContext.contextPath}/message/inbox/1">返回</a>
+  <a href="${requestContext.contextPath}/message/sendmessage?receiver=${message.sender.login}">回复</a>
 </div>
 </div>
 <#include "../include/right_include.ftl">

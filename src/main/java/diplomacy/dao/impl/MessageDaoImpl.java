@@ -34,14 +34,24 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		template.saveOrUpdate(message);
 	}
 	
-	
+	@Override
+	public void save(MessageBox messageBox) {
+		HibernateTemplate template = getHibernateTemplate();
+		template.saveOrUpdate(messageBox);
+	}
+
 	@Override
 	public void delete(Message message) {
 		message.setStatus(MessageStatus.DELETED);
 		getHibernateTemplate().update(message);
 	}
 
-
+	@Override
+	public void delete(MessageBox messageBox) {
+		messageBox.setStatus(MessageStatus.DELETED);
+		getHibernateTemplate().update(messageBox);
+	}
+	
 	@Override
 	public void refresh(Message message) {
 		HibernateTemplate template = getHibernateTemplate();
@@ -69,7 +79,6 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		getHibernateTemplate().saveOrUpdate(box);
 		return null;
 	}
-
 
 	@Override
 	public Message getValidCodeMessage(String target) {
@@ -144,9 +153,8 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         return criteria;
     }
 
-
 	@Override
-	public MessageBox getMessageBoxById(int id) {
+	public MessageBox getMessageBoxById(long id) {
 		HibernateTemplate template = getHibernateTemplate();
 		DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
 		criteria.add(Restrictions.eq("id", id));
@@ -156,7 +164,6 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		if(list.isEmpty()) return null;
 		return list.get(0);
 	}
-
 
 	@Override
 	public Message getMessageById(long id) {
@@ -169,6 +176,5 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 		if(list.isEmpty()) return null;
 		return list.get(0);
 	}
-    
-    
+
 }

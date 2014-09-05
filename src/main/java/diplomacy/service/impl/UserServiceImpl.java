@@ -216,5 +216,23 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public User saveUserInfo(User user, String nicename, String email) {
+		user.setNicename(nicename);
+		user.setEmail(email);
+		userDao.save(user);
+		return user;
+	}
+
+	@Override
+	@Transactional(readOnly = false)
+	public User changePhone(User user, String phone) {
+		user.setPhone(phone);
+		userDao.save(user);
+		return user;
+	}
+	
+	
 	
 }

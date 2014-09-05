@@ -9,7 +9,9 @@ import diplomacy.vo.PagerBean;
 
 public interface MessageDao {
 	void save(Message message);
+	void save(MessageBox messageBox);
 	void delete(Message message);
+	void delete(MessageBox messageBox);
 	void refresh(Message message);
 	void setMessageMeta(Message message, MessageMeta meta);
 	MessageBox putMessageBox(Message message);
@@ -18,6 +20,6 @@ public interface MessageDao {
 	Attachment putAttachment(Attachment attachment);
     PagerBean<Message> listMessageBySender(User user, int offset, int limit);
     PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit);
-    MessageBox getMessageBoxById(int id);
+    MessageBox getMessageBoxById(long msgId);
     Message getMessageById(long id);
 }

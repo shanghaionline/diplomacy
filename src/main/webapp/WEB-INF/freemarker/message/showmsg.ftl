@@ -52,7 +52,9 @@
   <tr>
     <td align="left">附件</td>
     <td align="left">
-      <a href="/association/msg/down-attachment/8">中文附件名测试.txt</a>
+    <#list message.attachments as item>
+      <a href="${requestContext.contextPath}${item.uri}">${item.name}</a>
+    </#list>
     </td>
   </tr>
   

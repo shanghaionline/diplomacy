@@ -28,7 +28,7 @@
 	  <div class="main">
 	    
 <div class="login_left">
-<form action="/association/user/edit-info" method="POST" >
+<form action="${requestContext.contextPath}/user/modify" method="POST" >
   <table width="100%" border="0" cellpadding="2">
     <tr>
       <td width="35%"></td>
@@ -41,7 +41,7 @@
       <td width="10%"></td>
       <td align="left">会员姓名:</td>
       <td>
-	<input type="textfield" id="name" name="realname"
+	<input type="textfield" id="name" name="nicename"
 	       value="${user.nicename}" class="ipt_1"/>
 	<span></span>
       </td>
@@ -49,10 +49,8 @@
     <tr>
       <td width="10%"></td>
       <td align="left">会员手机:</td>
-      <td>
-	<input type="textfield" id="name" name="phone"
-	       value="${user.phone}" class="ipt_1"/>
-	<span></span>
+      <td align="left">
+	       ${user.phone}
       </td>
     </tr>
     <tr>

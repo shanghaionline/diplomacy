@@ -22,6 +22,7 @@
 	</mvc:interceptors>
 	<mvc:resources mapping="/static/**" location="/static/" />
 	<mvc:resources mapping="/upload/**" location="/upload/" />
+	<mvc:resources mapping="/attachment/**" location="/attachment/" />
 	<!--views -->
 	<bean id="freemarkerConfig"
 		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">

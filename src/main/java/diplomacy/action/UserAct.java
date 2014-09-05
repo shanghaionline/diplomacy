@@ -132,6 +132,15 @@ public class UserAct {
 		return "user/modify";
 	}
 	
+	@RequestMapping(value="/modify", method = RequestMethod.POST)
+	public String modifyUser(ModelMap model, String nicename, String email){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		userService.saveUserInfo(user, nicename, email);
+		return "redirect:/user/modify";
+	}
+
+	
+	
 	@RequestMapping(value="/modifypwd", method = RequestMethod.GET)
 	String modifypwdpage(ModelMap model){
 		User user = userService.perm((Long)model.get("SessionUserId"));
@@ -165,6 +174,21 @@ public class UserAct {
 		return "user/modifyphone";
 	}
 
+	@RequestMapping(value="/modifyphone", method = RequestMethod.POST)
+	public String changePhone(ModelMap model, String phone, String code){
+		User user = userService.perm((Long)model.get("SessionUserId"));
+		if(user == null) return "common/error";
+		if(!messageService.checkValidCode(phone, code)){
+			model.addAttribute("errCodeMsg", "验证码错误");
+			model.addAttribute("phone", phone);
+			model.addAttribute("code", code);
+			return modifyphonepage(model);
+		}
+		userService.changePhone(user, phone);
+		return "redirect:/user/modifyphone";
+	}
+	
+	
 	@RequestMapping(value="/select-user/q{query}/{page}")
 	public String selectUser(ModelMap model, @PathVariable String query, @PathVariable Integer page){
 		if(page == null) page = 1;
@@ -174,6 +198,9 @@ public class UserAct {
 		model.addAttribute("query", query == null ? "" : query);
 		return "user/select-user";
 	}
+	
+	
+	
 	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
