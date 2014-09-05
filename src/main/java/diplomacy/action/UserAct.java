@@ -75,7 +75,7 @@ public class UserAct {
 		}
 		User user = userService.handleInvited(userId, nicename, phone, email);
 		if (user == null) return "common/error";
-		return "index";
+		return "user/invite-ok";
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
