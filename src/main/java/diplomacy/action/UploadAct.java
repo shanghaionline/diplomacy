@@ -14,32 +14,34 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/fileupload")
 public class UploadAct implements ServletContextAware {
-	private ServletContext servletContext;
-	@RequestMapping("/upload")
-	@ResponseBody
-	String upload(MultipartFile file) {
-		String uri = String.format("/upload/%d%s", 
-				System.currentTimeMillis(), getFileSuffix(file.getOriginalFilename()));
-		String path = servletContext.getRealPath(uri);
-		String ret = "";
-		try {
-			file.transferTo(new File(path));
-			ret = uri;
-		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-	private String getFileSuffix(String filename) {
-		int e = filename.lastIndexOf(".");
-		if (e == -1) {
-			return "";
-		}
-		return filename.substring(e);
-	}
+    private ServletContext servletContext;
 
-	@Override
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
+    @RequestMapping("/upload")
+    @ResponseBody
+    String upload(MultipartFile file) {
+        String uri = String.format("/upload/%d%s",
+                System.currentTimeMillis(), getFileSuffix(file.getOriginalFilename()));
+        String path = servletContext.getRealPath(uri);
+        String ret = "";
+        try {
+            file.transferTo(new File(path));
+            ret = uri;
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    private String getFileSuffix(String filename) {
+        int e = filename.lastIndexOf(".");
+        if (e == -1) {
+            return "";
+        }
+        return filename.substring(e);
+    }
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 }

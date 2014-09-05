@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>NODECMS</title>
-  </head>
-  <body>
-    Hello World
-  </body>
+</head>
+<body>
+Hello World
+</body>
 </html>

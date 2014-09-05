@@ -21,103 +21,104 @@ import diplomacy.service.UserService;
 @RequestMapping("/message")
 @SessionAttributes("SessionUserId")
 public class MessageAct {
-	private MessageService messageService;
-	private UserService userService;
-	@RequestMapping(value = "/sendvalidcode")
-	@ResponseBody
-	public Map<String, String> sendValidCode(String phone) {
-		Map<String, String> ret = new HashMap<String, String>();
-		messageService.sendPhoneValidCode(phone);
-		ret.put("msg", "success");
-		ret.put("phone", phone);
-		return ret;
-	}
-	
-	@RequestMapping(value= "/sendmessage", method = RequestMethod.POST)
-	public String sendMessage(ModelMap model, String receiver, String perm, String title, String content, 
-			MultipartFile attachment){
-		User sender = userService.perm((Long)model.get("SessionUserId"));
-		if (sender == null) return "common/error";
-		if (perm == null || perm.isEmpty()) {
-			messageService.sendSingleMessage(sender, receiver, title, content, attachment);
-		} else {
-			messageService.sendMultipleMessage(sender, perm, title, content, attachment);
-		}
-		return "redirect:/message/inbox/1";
-	}
-	
-	@RequestMapping(value="/inbox/{page}")
-	public String inbox(ModelMap model, @PathVariable int page){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		model.addAttribute("user", user);
-        model.addAttribute("boxList", messageService.listInboxByPage(user, page, 20));
-		return "message/inbox";
-	}
-	
-	@RequestMapping(value="/outbox/{page}")
-	public String outbox(ModelMap model, @PathVariable int page){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		model.addAttribute("user", user);
-        model.addAttribute("boxList", messageService.listOutboxByPage(user, page, 20));
-		return "message/outbox";
-	}
-	
-	@RequestMapping(value="/sendmessage", method = RequestMethod.GET)
-	public String sendMessagePage(ModelMap model, String receiver){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		model.addAttribute("user", user);
-		if(receiver != null) model.addAttribute("receiver", receiver);
-		return "message/sendmessage";
-	}
-	
-	@RequestMapping(value="/showmsg/{msgId}")
-	public String showMsg(ModelMap model, @PathVariable long msgId){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		model.addAttribute("user", user);
-		Message msg = messageService.readMessage(user, msgId);
-		if(msg == null) return "common/error";
-		model.addAttribute("message", msg);
-		return "message/showmsg";
-	}
-	
-	@RequestMapping(value="/showreceive/{msgId}")
-	public String showReceive(ModelMap model, @PathVariable long msgId){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		model.addAttribute("user", user);
-		Message msg = messageService.receiveMessage(user, msgId, true);
-		if(msg == null) return "common/error";
-		model.addAttribute("message", msg);
-		return "message/showreceive";
-	}
-	
-	@RequestMapping(value="/inbox/delete")
-	public String deleteInbox(ModelMap model, long[] ids){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		if(ids != null) messageService.deleteMessageBox(user, ids);
-		return "redirect:/message/inbox/1";
-	}
-	
-	
-	@RequestMapping(value="/outbox/delete")
-	public String deleteOutbox(ModelMap model, long[] ids){
-		User user = userService.perm((Long)model.get("SessionUserId"));
-		if(user == null) return "common/error";
-		if(ids != null) messageService.deleteMessage(user, ids);
-		return "redirect:/message/outbox/1";
-	}
-	
-	public void setMessageService(MessageService messageService) {
-		this.messageService = messageService;
-	}
+    private MessageService messageService;
+    private UserService userService;
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-	
+    @RequestMapping(value = "/sendvalidcode")
+    @ResponseBody
+    public Map<String, String> sendValidCode(String phone) {
+        Map<String, String> ret = new HashMap<String, String>();
+        messageService.sendPhoneValidCode(phone);
+        ret.put("status", "success");
+        ret.put("phone", phone);
+        return ret;
+    }
+
+    @RequestMapping(value = "/sendmessage", method = RequestMethod.POST)
+    public String sendMessage(ModelMap model, String receiver, String perm, String title, String content,
+                              MultipartFile attachment) {
+        User sender = userService.perm((Long) model.get("SessionUserId"));
+        if (sender == null) return "common/error";
+        if (perm == null || perm.isEmpty()) {
+            messageService.sendSingleMessage(sender, receiver, title, content, attachment);
+        } else {
+            messageService.sendMultipleMessage(sender, perm, title, content, attachment);
+        }
+        return "redirect:/message/inbox/1";
+    }
+
+    @RequestMapping(value = "/inbox/{page}")
+    public String inbox(ModelMap model, @PathVariable int page) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        model.addAttribute("boxList", messageService.listInboxByPage(user, page, 20));
+        return "message/inbox";
+    }
+
+    @RequestMapping(value = "/outbox/{page}")
+    public String outbox(ModelMap model, @PathVariable int page) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        model.addAttribute("boxList", messageService.listOutboxByPage(user, page, 20));
+        return "message/outbox";
+    }
+
+    @RequestMapping(value = "/sendmessage", method = RequestMethod.GET)
+    public String sendMessagePage(ModelMap model, String receiver) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        if (receiver != null) model.addAttribute("receiver", receiver);
+        return "message/sendmessage";
+    }
+
+    @RequestMapping(value = "/showmsg/{msgId}")
+    public String showMsg(ModelMap model, @PathVariable long msgId) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        Message msg = messageService.readMessage(user, msgId);
+        if (msg == null) return "common/error";
+        model.addAttribute("message", msg);
+        return "message/showmsg";
+    }
+
+    @RequestMapping(value = "/showreceive/{msgId}")
+    public String showReceive(ModelMap model, @PathVariable long msgId) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        Message msg = messageService.receiveMessage(user, msgId, true);
+        if (msg == null) return "common/error";
+        model.addAttribute("message", msg);
+        return "message/showreceive";
+    }
+
+    @RequestMapping(value = "/inbox/delete")
+    public String deleteInbox(ModelMap model, long[] ids) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        if (ids != null) messageService.deleteMessageBox(user, ids);
+        return "redirect:/message/inbox/1";
+    }
+
+
+    @RequestMapping(value = "/outbox/delete")
+    public String deleteOutbox(ModelMap model, long[] ids) {
+        User user = userService.perm((Long) model.get("SessionUserId"));
+        if (user == null) return "common/error";
+        if (ids != null) messageService.deleteMessage(user, ids);
+        return "redirect:/message/outbox/1";
+    }
+
+    public void setMessageService(MessageService messageService) {
+        this.messageService = messageService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 }

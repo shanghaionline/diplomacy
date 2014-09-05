@@ -25,87 +25,86 @@ import diplomacy.service.UserService;
 
 @Service("messageService")
 public class MessageServiceImpl implements MessageService, ServletContextAware {
-	private ServletContext servletContext;
-	private MessageDao messageDao;
-	private UserDao userDao;
-	private UserService userService;
+    private ServletContext servletContext;
+    private MessageDao messageDao;
+    private UserDao userDao;
+    private UserService userService;
 
-	@Override
-	@Transactional(readOnly = false)
-	public Message sendPhoneValidCode(String target) {
-		String code = makeValidCode();
-		Message msg = new Message();
-		msg.setMsgType(MessageType.VALIDCODE);
-		msg.setTitle("VALID CODE");
-		msg.setContent("验证码: " + code);
-		msg.setStatus(MessageStatus.UNSEND);
-		messageDao.save(msg);
-		messageDao.setMessageMeta(msg, new MessageMeta("validcode_target", target));
-		messageDao.setMessageMeta(msg, new MessageMeta("validcode_code", code));
-		messageDao.refresh(msg);
-		return msg;
-	}
-	
-	@Override
-	@Transactional(readOnly = false)
-	public boolean checkValidCode(String target, String code, boolean clean) {
-		Message codeMessage = messageDao.getValidCodeMessage(target);
-		if (codeMessage != null &&
-				codeMessage.getMetas().get("validcode_code").getValue().equals(code)) {
-			if (clean) messageDao.delete(codeMessage);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public Message sendPhoneValidCode(String target) {
+        String code = makeValidCode();
+        Message msg = new Message();
+        msg.setMsgType(MessageType.VALIDCODE);
+        msg.setTitle("VALID CODE");
+        msg.setContent("验证码: " + code);
+        msg.setStatus(MessageStatus.UNSEND);
+        messageDao.save(msg);
+        messageDao.setMessageMeta(msg, new MessageMeta("validcode_target", target));
+        messageDao.setMessageMeta(msg, new MessageMeta("validcode_code", code));
+        messageDao.refresh(msg);
+        return msg;
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public boolean checkValidCode(String target, String code) {
-		return checkValidCode(target, code, true);
-	}
-	
-	
+    @Override
+    @Transactional(readOnly = false)
+    public boolean checkValidCode(String target, String code, boolean clean) {
+        Message codeMessage = messageDao.getValidCodeMessage(target);
+        if (codeMessage != null &&
+                codeMessage.getMetas().get("validcode_code").getValue().equals(code)) {
+            if (clean) messageDao.delete(codeMessage);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public Message sendSingleMessage(User sender, String receiver,
-			String title, String content, MultipartFile attachment) {
-		User rec = userDao.getUserByLogin(receiver);
-		if (userService.perm(sender, "PERM_SEND_SINGLE") == null ||
-				rec == null) return null;
-		Message msg = new Message();
-		msg.setMsgType(MessageType.SINGLEMSG);
-		msg.setSender(sender);
-		msg.setReceiver(rec);
-		msg.setTitle(title);
-		msg.setContent(content);
-		msg.setStatus(MessageStatus.READED);
-		messageDao.save(msg);
-		if (attachment != null) putAttachment(msg, attachment);
-		messageDao.putMessageBox(msg);
-		return null;
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public boolean checkValidCode(String target, String code) {
+        return checkValidCode(target, code, true);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public Message sendMultipleMessage(User sender, String perm, String title,
-			String content, MultipartFile attachment) {
-		if (userService.perm(sender, "PERM_SEND_MULTIPLE", perm) == null) return null;
-		Message msg = new Message();
-		msg.setMsgType(MessageType.MULTIPLE);
-		msg.setSender(sender);
+
+    @Override
+    @Transactional(readOnly = false)
+    public Message sendSingleMessage(User sender, String receiver,
+                                     String title, String content, MultipartFile attachment) {
+        User rec = userDao.getUserByLogin(receiver);
+        if (userService.perm(sender, "PERM_SEND_SINGLE") == null ||
+                rec == null) return null;
+        Message msg = new Message();
+        msg.setMsgType(MessageType.SINGLEMSG);
+        msg.setSender(sender);
+        msg.setReceiver(rec);
+        msg.setTitle(title);
+        msg.setContent(content);
+        msg.setStatus(MessageStatus.READED);
+        messageDao.save(msg);
+        if (attachment != null) putAttachment(msg, attachment);
+        messageDao.putMessageBox(msg);
+        return null;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Message sendMultipleMessage(User sender, String perm, String title,
+                                       String content, MultipartFile attachment) {
+        if (userService.perm(sender, "PERM_SEND_MULTIPLE", perm) == null) return null;
+        Message msg = new Message();
+        msg.setMsgType(MessageType.MULTIPLE);
+        msg.setSender(sender);
         msg.setReceiver(getMultiMessageReceiver(perm));
-		msg.setTitle(title);
-		msg.setContent(content);
-		msg.setStatus(MessageStatus.READED);
-		messageDao.save(msg);
-		if (attachment != null) putAttachment(msg, attachment);
-		messageDao.setMessageMeta(msg, new MessageMeta("MULTIPLE_MESSAGE_PERM", perm));
-		for (User receiver : userService.listUserByPerm(perm)) {
-			messageDao.putMessageBox(msg, receiver);
-		}
-		return msg;
-	}
+        msg.setTitle(title);
+        msg.setContent(content);
+        msg.setStatus(MessageStatus.READED);
+        messageDao.save(msg);
+        if (attachment != null) putAttachment(msg, attachment);
+        messageDao.setMessageMeta(msg, new MessageMeta("MULTIPLE_MESSAGE_PERM", perm));
+        for (User receiver : userService.listUserByPerm(perm)) {
+            messageDao.putMessageBox(msg, receiver);
+        }
+        return msg;
+    }
 
     @Override
     public PagerBean<Message> listOutboxByPage(User user, int page, int size) {
@@ -121,102 +120,101 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
 
     private User getMultiMessageReceiver(String perm) {
         List<User> list = userDao.listUserByMeta(UserStatus.SYSTEM, "MULTIPLE_RECEIVER_GROUP", perm);
-        if(list.isEmpty()) return null;
+        if (list.isEmpty()) return null;
         return list.get(0);
     }
 
     private Attachment putAttachment(Message message, MultipartFile attachment) {
-		String uri = String.format("/attachment/%d%s", 
-				System.currentTimeMillis(), getFileSuffix(attachment.getOriginalFilename()));
-		String path = servletContext.getRealPath(uri);
-		Attachment ret = null;
-		try {
-			attachment.transferTo(new File(path));
-			ret = new Attachment();
-			ret.setMessage(message);
-			ret.setName(attachment.getOriginalFilename());
-			ret.setStatus("ENABLED");
-			ret.setUri(uri);
-			messageDao.putAttachment(ret);
-		} catch (IllegalStateException | IOException e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-	private String getFileSuffix(String filename) {
-		int e = filename.lastIndexOf(".");
-		if (e == -1) {
-			return "";
-		}
-		return filename.substring(e);
-	}
+        String uri = String.format("/attachment/%d%s",
+                System.currentTimeMillis(), getFileSuffix(attachment.getOriginalFilename()));
+        String path = servletContext.getRealPath(uri);
+        Attachment ret = null;
+        try {
+            attachment.transferTo(new File(path));
+            ret = new Attachment();
+            ret.setMessage(message);
+            ret.setName(attachment.getOriginalFilename());
+            ret.setStatus("ENABLED");
+            ret.setUri(uri);
+            messageDao.putAttachment(ret);
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
-	
-	@Override
-	public Message readMessage(User user, long msgId) {
-		Message msg = messageDao.getMessageById(msgId);
-		if(msg == null || !msg.getSender().getId().equals(user.getId()))
-			return null;
-		return msg;
-	}
-	
-	
+    private String getFileSuffix(String filename) {
+        int e = filename.lastIndexOf(".");
+        if (e == -1) {
+            return "";
+        }
+        return filename.substring(e);
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public Message receiveMessage(User user, long msgId, boolean setReaded) {
-		MessageBox msgBox = messageDao.getMessageBoxById(msgId);
-		if(msgBox == null || !msgBox.getReceiver().getId().equals(user.getId()))
-			return null;
-		if(setReaded && msgBox.getStatus().equals(MessageStatus.UNREAD)) {
-			msgBox.setStatus(MessageStatus.READED);
-			messageDao.save(msgBox);
-		}
-		return msgBox.getMessage();
-	}
-	
-	
 
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteMessage(User user, long[] ids) {
-		for(long id : ids){
-			Message msg = messageDao.getMessageById(id);
-			if(msg != null && msg.getSender().getId().equals(user.getId()))
-				messageDao.delete(msg);
-		}
-	}
+    @Override
+    public Message readMessage(User user, long msgId) {
+        Message msg = messageDao.getMessageById(msgId);
+        if (msg == null || !msg.getSender().getId().equals(user.getId()))
+            return null;
+        return msg;
+    }
 
-	@Override
-	@Transactional(readOnly = false)
-	public void deleteMessageBox(User user, long[] ids) {
-		for(long id : ids){
-			MessageBox msgBox = messageDao.getMessageBoxById(id);
-			if(msgBox != null && msgBox.getReceiver().getId().equals(user.getId()))
-				messageDao.delete(msgBox);
-		}
-	}
 
-	private String makeValidCode() {
-		Random r = new Random();
-		return String.format("%04d", r.nextInt(10000));
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public Message receiveMessage(User user, long msgId, boolean setReaded) {
+        MessageBox msgBox = messageDao.getMessageBoxById(msgId);
+        if (msgBox == null || !msgBox.getReceiver().getId().equals(user.getId()))
+            return null;
+        if (setReaded && msgBox.getStatus().equals(MessageStatus.UNREAD)) {
+            msgBox.setStatus(MessageStatus.READED);
+            messageDao.save(msgBox);
+        }
+        return msgBox.getMessage();
+    }
 
-	
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
 
-	public void setMessageDao(MessageDao messageDao) {
-		this.messageDao = messageDao;
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteMessage(User user, long[] ids) {
+        for (long id : ids) {
+            Message msg = messageDao.getMessageById(id);
+            if (msg != null && msg.getSender().getId().equals(user.getId()))
+                messageDao.delete(msg);
+        }
+    }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteMessageBox(User user, long[] ids) {
+        for (long id : ids) {
+            MessageBox msgBox = messageDao.getMessageBoxById(id);
+            if (msgBox != null && msgBox.getReceiver().getId().equals(user.getId()))
+                messageDao.delete(msgBox);
+        }
+    }
 
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
-	
+    private String makeValidCode() {
+        Random r = new Random();
+        return String.format("%04d", r.nextInt(10000));
+    }
+
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public void setMessageDao(MessageDao messageDao) {
+        this.messageDao = messageDao;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
 }

@@ -25,83 +25,83 @@ import diplomacy.entity.status.MessageType;
 @Repository("messageDao")
 public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
-	@Override
-	public void save(Message message) {
-		HibernateTemplate template = getHibernateTemplate();
-		if (message.getId() == null) {
-			message.setCreated(new Date());
-		}
-		template.saveOrUpdate(message);
-	}
-	
-	@Override
-	public void save(MessageBox messageBox) {
-		HibernateTemplate template = getHibernateTemplate();
-		template.saveOrUpdate(messageBox);
-	}
+    @Override
+    public void save(Message message) {
+        HibernateTemplate template = getHibernateTemplate();
+        if (message.getId() == null) {
+            message.setCreated(new Date());
+        }
+        template.saveOrUpdate(message);
+    }
 
-	@Override
-	public void delete(Message message) {
-		message.setStatus(MessageStatus.DELETED);
-		getHibernateTemplate().update(message);
-	}
+    @Override
+    public void save(MessageBox messageBox) {
+        HibernateTemplate template = getHibernateTemplate();
+        template.saveOrUpdate(messageBox);
+    }
 
-	@Override
-	public void delete(MessageBox messageBox) {
-		messageBox.setStatus(MessageStatus.DELETED);
-		getHibernateTemplate().update(messageBox);
-	}
-	
-	@Override
-	public void refresh(Message message) {
-		HibernateTemplate template = getHibernateTemplate();
-		template.refresh(message);
-	}
+    @Override
+    public void delete(Message message) {
+        message.setStatus(MessageStatus.DELETED);
+        getHibernateTemplate().update(message);
+    }
 
-	@Override
-	public void setMessageMeta(Message message, MessageMeta meta) {
-		HibernateTemplate template = getHibernateTemplate();
-		meta.setMessage(message);
-		template.saveOrUpdate(meta);
-	}
+    @Override
+    public void delete(MessageBox messageBox) {
+        messageBox.setStatus(MessageStatus.DELETED);
+        getHibernateTemplate().update(messageBox);
+    }
 
-	@Override
-	public MessageBox putMessageBox(Message message) {
-		return putMessageBox(message, message.getReceiver());
-	}
+    @Override
+    public void refresh(Message message) {
+        HibernateTemplate template = getHibernateTemplate();
+        template.refresh(message);
+    }
 
-	@Override
-	public MessageBox putMessageBox(Message message, User receiver) {
-		MessageBox box = new MessageBox();
-		box.setMessage(message);
-		box.setReceiver(receiver);
-		box.setStatus(MessageStatus.UNREAD);
-		getHibernateTemplate().saveOrUpdate(box);
-		return null;
-	}
+    @Override
+    public void setMessageMeta(Message message, MessageMeta meta) {
+        HibernateTemplate template = getHibernateTemplate();
+        meta.setMessage(message);
+        template.saveOrUpdate(meta);
+    }
 
-	@Override
-	public Message getValidCodeMessage(String target) {
-		HibernateTemplate template = getHibernateTemplate();
-		DetachedCriteria w = DetachedCriteria.forClass(MessageMeta.class);
-		w.add(Restrictions.eq("key", "validcode_target"));
-		w.add(Restrictions.eq("value", target));
-		w.setProjection(Projections.property("id"));
-		DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
-		criteria.add(Subqueries.exists(w));
-		criteria.add(Restrictions.eq("status",MessageStatus.READED));
-		criteria.add(Restrictions.eq("msgType", MessageType.VALIDCODE));
-		criteria.addOrder(Property.forName("created").desc());
-		List<?> list = template.findByCriteria(criteria, 0, 1);
-		if (list.isEmpty()) return null;
-		return (Message)list.get(0);
-	}
+    @Override
+    public MessageBox putMessageBox(Message message) {
+        return putMessageBox(message, message.getReceiver());
+    }
 
-	@Override
-	public Attachment putAttachment(Attachment attachment) {
-		getHibernateTemplate().saveOrUpdate(attachment);
-		return attachment;
-	}
+    @Override
+    public MessageBox putMessageBox(Message message, User receiver) {
+        MessageBox box = new MessageBox();
+        box.setMessage(message);
+        box.setReceiver(receiver);
+        box.setStatus(MessageStatus.UNREAD);
+        getHibernateTemplate().saveOrUpdate(box);
+        return null;
+    }
+
+    @Override
+    public Message getValidCodeMessage(String target) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria w = DetachedCriteria.forClass(MessageMeta.class);
+        w.add(Restrictions.eq("key", "validcode_target"));
+        w.add(Restrictions.eq("value", target));
+        w.setProjection(Projections.property("id"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
+        criteria.add(Subqueries.exists(w));
+        criteria.add(Restrictions.eq("status", MessageStatus.READED));
+        criteria.add(Restrictions.eq("msgType", MessageType.VALIDCODE));
+        criteria.addOrder(Property.forName("created").desc());
+        List<?> list = template.findByCriteria(criteria, 0, 1);
+        if (list.isEmpty()) return null;
+        return (Message) list.get(0);
+    }
+
+    @Override
+    public Attachment putAttachment(Attachment attachment) {
+        getHibernateTemplate().saveOrUpdate(attachment);
+        return attachment;
+    }
 
     @Override
     public PagerBean<Message> listMessageBySender(User user, int offset, int limit) {
@@ -111,9 +111,9 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         DetachedCriteria countCriteria = queryCriteriaMessageBySender(user);
         criteria.addOrder(Property.forName("created").desc());
         countCriteria.setProjection(Projections.rowCount());
-        ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
+        ret.setAllCount((Long) template.findByCriteria(countCriteria).get(0));
         @SuppressWarnings("unchecked")
-        List<Message> list = (List<Message>)template.findByCriteria(criteria, offset, limit);
+        List<Message> list = (List<Message>) template.findByCriteria(criteria, offset, limit);
         ret.setList(list);
         ret.setStart(offset);
         ret.setSize(limit);
@@ -128,9 +128,9 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         DetachedCriteria countCriteria = queryCriteriaMessageBoxByReceiver(user);
         criteria.addOrder(Property.forName("id").desc());
         countCriteria.setProjection(Projections.rowCount());
-        ret.setAllCount((Long)template.findByCriteria(countCriteria).get(0));
+        ret.setAllCount((Long) template.findByCriteria(countCriteria).get(0));
         @SuppressWarnings("unchecked")
-        List<MessageBox> list = (List<MessageBox>)template.findByCriteria(criteria, offset, limit);
+        List<MessageBox> list = (List<MessageBox>) template.findByCriteria(criteria, offset, limit);
         ret.setList(list);
         ret.setStart(offset);
         ret.setSize(limit);
@@ -153,28 +153,28 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         return criteria;
     }
 
-	@Override
-	public MessageBox getMessageBoxById(long id) {
-		HibernateTemplate template = getHibernateTemplate();
-		DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
-		criteria.add(Restrictions.eq("id", id));
-		criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
-		@SuppressWarnings("unchecked")
-	    List<MessageBox> list = (List<MessageBox>)template.findByCriteria(criteria, 0, 1);
-		if(list.isEmpty()) return null;
-		return list.get(0);
-	}
+    @Override
+    public MessageBox getMessageBoxById(long id) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
+        criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
+        @SuppressWarnings("unchecked")
+        List<MessageBox> list = (List<MessageBox>) template.findByCriteria(criteria, 0, 1);
+        if (list.isEmpty()) return null;
+        return list.get(0);
+    }
 
-	@Override
-	public Message getMessageById(long id) {
-		HibernateTemplate template = getHibernateTemplate();
-		DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
-		criteria.add(Restrictions.eq("id", id));
-		criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
-		@SuppressWarnings("unchecked")
-	    List<Message> list = (List<Message>)template.findByCriteria(criteria, 0, 1);
-		if(list.isEmpty()) return null;
-		return list.get(0);
-	}
+    @Override
+    public Message getMessageById(long id) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
+        criteria.add(Restrictions.eq("id", id));
+        criteria.add(Restrictions.ne("status", MessageStatus.DELETED));
+        @SuppressWarnings("unchecked")
+        List<Message> list = (List<Message>) template.findByCriteria(criteria, 0, 1);
+        if (list.isEmpty()) return null;
+        return list.get(0);
+    }
 
 }
