@@ -1,18 +1,21 @@
 package diplomacy.action;
 
+import diplomacy.validator.*;
+import diplomacy.vo.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import diplomacy.entity.User;
 import diplomacy.entity.status.UserStatus;
 import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
 import diplomacy.util.PasswordUtil;
-import diplomacy.vo.PagerBean;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +24,15 @@ public class UserAct {
 
     private UserService userService;
     private MessageService messageService;
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        Validator fix = new FixValidator(new Validator[]{
+           new LoginFormValidator(), new InviteFormValidator(), new UserModifyFormValidator(),
+                new ModifyPasswordFormValidator(), new ModifyPhoneFormValidator()
+        });
+        binder.setValidator(fix);
+    }
 
     @RequestMapping("/init")
     public String init() {
@@ -58,23 +70,24 @@ public class UserAct {
         if (!PasswordUtil.invateHash(userId).equalsIgnoreCase(checksum)) return "common/error";
         model.addAttribute("userId", userId);
         model.addAttribute("checksum", checksum);
+        if (model.get("inviteFormVO") == null) model.addAttribute("inviteFormVO", new InviteFormVO());
         return "user/invite";
     }
 
     @RequestMapping(value = "/invite/{userId}/{checksum}", method = RequestMethod.POST)
     public String handleInvite(ModelMap model,
                                @PathVariable Long userId, @PathVariable String checksum,
-                               String nicename, String email, String phone, String code) {
+                               @Valid InviteFormVO inviteFormVO, BindingResult result) {
         if (!PasswordUtil.invateHash(userId).equalsIgnoreCase(checksum)) return "common/error";
-        if (!messageService.checkValidCode(phone, code)) {
-            model.addAttribute("errCodeMsg", "验证码错误");
-            model.addAttribute("nicename", nicename);
-            model.addAttribute("phone", phone);
-            model.addAttribute("email", email);
-            model.addAttribute("checksum", checksum);
-            return "user/invite";
+        if (result.hasErrors()) {
+            return invite(userId, checksum, model);
         }
-        User user = userService.handleInvited(userId, nicename, phone, email);
+        if (!messageService.checkValidCode(inviteFormVO.getPhone(), inviteFormVO.getCode())) {
+            result.rejectValue("code", null, "验证码不正确");
+            return invite(userId, checksum, model);
+        }
+        User user = userService.handleInvited(userId,
+                inviteFormVO.getNicename(), inviteFormVO.getPhone(), inviteFormVO.getEmail());
         if (user == null) return "common/error";
         return "user/invite-ok";
     }
@@ -82,21 +95,21 @@ public class UserAct {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(ModelMap model) {
         User user = userService.perm((Long) model.get("SessionUserId"));
+        if (model.get("loginFormVO") == null) {
+            model.addAttribute("loginFormVO", new LoginFormVO());
+        }
         return "user/login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(String username, String password, ModelMap model) {
-        if (username == null || username.trim().isEmpty() ||
-                password == null || password.trim().isEmpty()) {
-            model.addAttribute("errorMsg", "用户名或密码不能为空");
-            return "user/login";
+    public String login(@Valid LoginFormVO loginFormVO, BindingResult result, ModelMap model) {
+        if (result.hasErrors()) {
+            return login(model);
         }
-        User user = userService.login(username, password);
+        User user = userService.login(loginFormVO.getUsername(), loginFormVO.getPassword());
         if (user == null) {
-            model.addAttribute("errorMsg", "用户名或密码错误");
-            model.addAttribute("username", username);
-            return "user/login";
+            result.rejectValue("username", null, "用户名或密码错误");
+            return login(model);
         }
         model.addAttribute("SessionUserId", user.getId());
         return "redirect:/message/inbox/1";
@@ -130,15 +143,16 @@ public class UserAct {
         User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
         model.addAttribute("user", user);
-        String checksum = PasswordUtil.invateHash(user.getId());
-        model.addAttribute("checksum", checksum);
+        if (model.get("userModifyFormVO") == null) model.addAttribute("userModifyFormVO", new UserModifyFormVO());
         return "user/modify";
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public String modifyUser(ModelMap model, String nicename, String email) {
+    public String modifyUser(@Valid UserModifyFormVO userModifyFormVO, BindingResult result, ModelMap model) {
         User user = userService.perm((Long) model.get("SessionUserId"));
-        userService.saveUserInfo(user, nicename, email);
+        if (user == null) return "common/error";
+        if (result.hasErrors()) return modify(model);
+        userService.saveUserInfo(user, userModifyFormVO.getNicename(), userModifyFormVO.getEmail());
         return "redirect:/user/modify";
     }
 
@@ -148,22 +162,20 @@ public class UserAct {
         User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
         model.addAttribute("user", user);
+        if (model.get("modifyPasswordFormVO") == null)
+            model.addAttribute("modifyPasswordFormVO", new ModifyPasswordFormVO());
         return "user/modifypwd";
     }
 
     @RequestMapping(value = "/modifypwd", method = RequestMethod.POST)
-    public String modifypwd(String oldpassword, String password, ModelMap model) {
+    public String modifypwd(@Valid ModifyPasswordFormVO modifyPasswordFormVO, BindingResult result, ModelMap model) {
         User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "redirect:/user/login";
-        model.addAttribute("user", user);
-        if (oldpassword == null || oldpassword.trim().isEmpty() ||
-                password == null || password.trim().isEmpty()) {
-            model.addAttribute("errorMsg", "密码不能为空");
-            return "user/modifypwd";
-        }
-        if (userService.changePassword(user, oldpassword, password) == null) {
-            model.addAttribute("errorMsg", "密码错误");
-            return "user/modifypwd";
+        if (result.hasErrors()) return modifypwdpage(model);
+        if (userService.changePassword(user, modifyPasswordFormVO.getOldpassword(),
+                modifyPasswordFormVO.getPassword()) == null) {
+            result.rejectValue("oldpassword", null, "旧密码错误");
+            return modifypwdpage(model);
         }
         return "redirect:/user/modify";
     }
@@ -173,20 +185,20 @@ public class UserAct {
         User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
         model.addAttribute("user", user);
+        if (model.get("modifyPhoneFormVO") == null) model.addAttribute("modifyPhoneFormVO", new ModifyPhoneFormVO());
         return "user/modifyphone";
     }
 
     @RequestMapping(value = "/modifyphone", method = RequestMethod.POST)
-    public String changePhone(ModelMap model, String phone, String code) {
+    public String changePhone(@Valid ModifyPhoneFormVO modifyPhoneFormVO, BindingResult result, ModelMap model) {
         User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
-        if (!messageService.checkValidCode(phone, code)) {
-            model.addAttribute("errCodeMsg", "验证码错误");
-            model.addAttribute("phone", phone);
-            model.addAttribute("code", code);
+        if (result.hasErrors()) return modifyphonepage(model);
+        if (!messageService.checkValidCode(modifyPhoneFormVO.getPhone(), modifyPhoneFormVO.getCode())) {
+            result.rejectValue("code", null, "验证码错误");
             return modifyphonepage(model);
         }
-        userService.changePhone(user, phone);
+        userService.changePhone(user, modifyPhoneFormVO.getPhone());
         return "redirect:/user/modifyphone";
     }
 

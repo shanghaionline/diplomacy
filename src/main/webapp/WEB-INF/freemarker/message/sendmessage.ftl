@@ -53,44 +53,56 @@
                             <tr>
                                 <td width="15%">收件人:</td>
                                 <td align="left">
+                                    <@spring.bind "sendMsgFormVO.receiver"/>
                                     <input type="textfield" id="message_receiver_value"
                                            class="ipt_1"
-                                           name="receiver"
-                                           value="${receiver!}"/>
+                                           name="${spring.status.expression}"
+                                           value="${spring.status.value?default(receiver!)}"/>
                                     <input type="button" value="选择" onClick="show_contact_list()"/>
-                                    <span></span>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>&nbsp;</td>
                                 <td align="left">
-                                    <select id="group_id_select" name="perm">
+                                    <@spring.bind "sendMsgFormVO.perm"/>
+                                    <select id="group_id_select" name="${spring.status.expression}">
                                         <option value="">单会员</option>
-                                        <option value="1">会员</option>
-                                        <option value="2">理事</option>
-                                        <option value="3">会长</option>
+                                        <option value="PERM_MESSAGE_MEMBER">会员</option>
+                                        <option value="PERM_MESSAGE_DIRECTOR">理事</option>
+                                        <option value="PERM_MESSAGE_CHAIRMAN">会长</option>
                                     </select>
-                                    <span></span>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>标&nbsp;&nbsp;题:</td>
                                 <td align="left">
+                                    <@spring.bind "sendMsgFormVO.title"/>
                                     <input type="textfield"
                                            class="ipt_1"
-                                           name="title"
-                                           value=""/>
-                                    <span></span>
+                                           name="${spring.status.expression}"
+                                           value="${spring.status.value?default("")}"/>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>
                                 <td>内&nbsp;&nbsp;容</td>
                                 <td align="left">
-                                    <textarea name="content"
-                                              rows="10" cols="50"></textarea>
-                                    <span></span>
+                                    <@spring.bind "sendMsgFormVO.content"/>
+                                    <textarea name="${spring.status.expression}"
+                                              rows="10" cols="50">${spring.status.value?default("")}</textarea>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>

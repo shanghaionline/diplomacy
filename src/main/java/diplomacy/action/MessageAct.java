@@ -3,13 +3,15 @@ package diplomacy.action;
 import java.util.HashMap;
 import java.util.Map;
 
+import diplomacy.validator.FixValidator;
+import diplomacy.validator.SendMsgFormValidator;
+import diplomacy.vo.SendMsgFormVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import diplomacy.entity.Message;
@@ -17,12 +19,23 @@ import diplomacy.entity.User;
 import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/message")
 @SessionAttributes("SessionUserId")
 public class MessageAct {
     private MessageService messageService;
     private UserService userService;
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        Validator fix = new FixValidator(new Validator[]{
+           new SendMsgFormValidator()
+        });
+        binder.setValidator(fix);
+    }
 
     @RequestMapping(value = "/sendvalidcode")
     @ResponseBody
@@ -35,14 +48,17 @@ public class MessageAct {
     }
 
     @RequestMapping(value = "/sendmessage", method = RequestMethod.POST)
-    public String sendMessage(ModelMap model, String receiver, String perm, String title, String content,
-                              MultipartFile attachment) {
+    public String sendMessage(@Valid SendMsgFormVO sendMsgFormVO, BindingResult result,
+                              ModelMap model, MultipartFile attachment) {
         User sender = userService.perm((Long) model.get("SessionUserId"));
         if (sender == null) return "common/error";
-        if (perm == null || perm.isEmpty()) {
-            messageService.sendSingleMessage(sender, receiver, title, content, attachment);
+        if (result.hasErrors()) return sendMessagePage(model, null);
+        if (sendMsgFormVO.getPerm() == null || sendMsgFormVO.getPerm().isEmpty()) {
+            messageService.sendSingleMessage(sender,
+                    sendMsgFormVO.getReceiver(), sendMsgFormVO.getTitle(), sendMsgFormVO.getContent(), attachment);
         } else {
-            messageService.sendMultipleMessage(sender, perm, title, content, attachment);
+            messageService.sendMultipleMessage(sender,
+                    sendMsgFormVO.getPerm(), sendMsgFormVO.getTitle(), sendMsgFormVO.getContent(), attachment);
         }
         return "redirect:/message/inbox/1";
     }
@@ -71,6 +87,7 @@ public class MessageAct {
         if (user == null) return "common/error";
         model.addAttribute("user", user);
         if (receiver != null) model.addAttribute("receiver", receiver);
+        if (model.get("sendMsgFormVO") == null) model.addAttribute("sendMsgFormVO", new SendMsgFormVO());
         return "message/sendmessage";
     }
 

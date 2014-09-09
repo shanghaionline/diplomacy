@@ -23,11 +23,20 @@ import diplomacy.vo.PagerBean;
 @Service("userService")
 public class UserServiceImpl implements UserService {
     static final String[] PERMISSIONS = new String[]{
-            "PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE", "PERM_SEND_MULTIPLE", "PERM_MESSAGE_MEMBER"};
+            "PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE", "PERM_SEND_MULTIPLE", "PERM_MESSAGE_MEMBER",
+            "PERM_MESSAGE_DIRECTOR", "PERM_MESSAGE_CHAIRMAN"};
     static final Map<String, String[]> GROUP_PERMS = new HashMap<String, String[]>();
 
     static {
         GROUP_PERMS.put("ADMIN", PERMISSIONS);
+        GROUP_PERMS.put("MEMBER", new String[] {"PERM_SEND_SINGLE", "PERM_MESSAGE_MEMBER"});
+        GROUP_PERMS.put("DIRECTOR", new String[] {
+                "PERM_SEND_MULTIPLE", "PERM_SEND_SINGLE", "PERM_MESSAGE_MEMBER", "PERM_MESSAGE_DIRECTOR"
+        });
+        GROUP_PERMS.put("CHAIRMAN", new String[] {
+                "PERM_SEND_MULTIPLE", "PERM_SEND_SINGLE", "PERM_MESSAGE_MEMBER", "PERM_MESSAGE_DIRECTOR",
+                "PERM_MESSAGE_CHAIRMAN"
+        });
     }
 
     private UserDao userDao;

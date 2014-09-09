@@ -38,30 +38,48 @@
                         <tr>
                             <td width="50%" align="left">姓&nbsp;&nbsp;名:</td>
                             <td align="left">
-                                <input type="textfield" id="name" name="nicename" value="${nicename!}" class="ipt_1"/>
-                                <span></span>
+                                <@spring.bind "inviteFormVO.nicename"/>
+                                <input type="textfield" id="name" name="${spring.status.expression}"
+                                       value="${spring.status.value?default("")}" class="ipt_1"/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>
                             <td width="50%" align="left">手机号码:</td>
                             <td align="left">
-                                <input type="textfield" id="valid_code_target" name="phone" value="${phone!}"
-                                       class="ipt_1"/><input id="valid_code_button" type="button" value="发送验证码"/>
-                                <span></span>
+                                <@spring.bind "inviteFormVO.phone"/>
+                                <input type="textfield" id="valid_code_target"
+                                       name="${spring.status.expression}"
+                                       value="${spring.status.value?default("")}" class="ipt_1"/>
+                                <input id="valid_code_button" type="button" value="发送验证码"/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>
                             <td width="50%" align="left">验证码:</td>
                             <td align="left">
-                                <input type="textfield" id="name" name="code" class="ipt_1"/>
-                                <span>${errCodeMsg!}</span>
+                                <@spring.bind "inviteFormVO.code"/>
+                                <input type="textfield" id="name"
+                                       name="${spring.status.expression}"
+                                       value="${spring.status.value?default("")}" class="ipt_1"/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>
                             <td width="50%" align="left">email:</td>
                             <td align="left">
-                                <input type="textfield" id="name" name="email" value="${email!}" class="ipt_1"/>
-                                <span></span>
+                                <@spring.bind "inviteFormVO.email"/>
+                                <input type="textfield" id="name" name="${spring.status.expression}"
+                                       value="${spring.status.value?default("")}" class="ipt_1"/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>

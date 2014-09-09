@@ -40,18 +40,26 @@
                                 <td width="35%"></td>
                                 <td align="left">新手机:</td>
                                 <td>
-                                    <input type="textfield" id="valid_code_target" name="phone"
-                                           value="${phone!user.phone}" class="ipt_1"/>
+                                    <@spring.bind "modifyPhoneFormVO.phone"/>
+                                    <input type="textfield" id="valid_code_target"
+                                           name="${spring.status.expression}"
+                                           value="${spring.status.value?default(user.phone)}" class="ipt_1"/>
                                     <input id="valid_code_button" type="button" value="发送验证码"/>
-                                    <span>${errorMsg!}</span>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>
                                 <td width="35%"></td>
                                 <td align="left">验证码:</td>
                                 <td>
-                                    <input type="textfield" id="name" name="code" class="ipt_1" value="${code!}"/>
-                                    <span>${errCodeMsg!}</span>
+                                    <@spring.bind "modifyPhoneFormVO.code"/>
+                                    <input type="textfield" id="name" name="${spring.status.expression}"
+                                           class="ipt_1" value="${spring.status.value?default("")}"/>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>

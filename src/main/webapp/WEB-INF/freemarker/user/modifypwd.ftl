@@ -34,20 +34,39 @@
                                 <td width="35%"></td>
                                 <td width="12%" align="left">旧密码:</td>
                                 <td>
+                                    <@spring.bind "modifyPasswordFormVO.oldpassword"/>
                                     <input type="password" id="password"
-                                           name="oldpassword"
+                                           name="${spring.status.expression}"
                                            class="ipt_1"/>
-                                    <span></span>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>
                                 <td width="35%"></td>
                                 <td align="left">新密码:</td>
                                 <td>
+                                    <@spring.bind "modifyPasswordFormVO.password"/>
                                     <input type="password" id="newPassword"
-                                           name="password"
+                                           name="${spring.status.expression}"
                                            class="ipt_1"/>
-                                    <span>${errorMsg!}</span>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="35%"></td>
+                                <td align="left">新密码:</td>
+                                <td>
+                                <@spring.bind "modifyPasswordFormVO.password2"/>
+                                    <input type="password" id="newPassword"
+                                           name="${spring.status.expression}"
+                                           class="ipt_1"/>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>

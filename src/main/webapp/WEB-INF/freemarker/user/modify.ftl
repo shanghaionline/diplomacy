@@ -42,9 +42,13 @@
                                 <td width="10%"></td>
                                 <td align="left">会员姓名:</td>
                                 <td>
-                                    <input type="textfield" id="name" name="nicename"
-                                           value="${user.nicename}" class="ipt_1"/>
-                                    <span></span>
+                                    <@spring.bind "userModifyFormVO.nicename" />
+                                    <input type="textfield" id="name" name="${spring.status.expression}"
+                                           value="${spring.status.value?default(user.nicename)}"
+                                           class="ipt_1"/>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>
@@ -58,9 +62,12 @@
                                 <td width="10%"></td>
                                 <td align="left">邮箱地址:</td>
                                 <td>
-                                    <input type="textfield" id="name" name="email"
-                                           value="${user.email}" class="ipt_1"/>
-                                    <span></span>
+                                    <@spring.bind "userModifyFormVO.email" />
+                                    <input type="textfield" id="name" name="${spring.status.expression}"
+                                           value="${spring.status.value?default(user.email)}" class="ipt_1"/>
+                                    <#list spring.status.errorMessages as error>
+                                    <span>${error}</span>
+                                    </#list>
                                 </td>
                             </tr>
                             <tr>

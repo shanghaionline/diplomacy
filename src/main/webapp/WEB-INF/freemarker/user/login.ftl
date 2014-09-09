@@ -36,8 +36,13 @@
                                 <b>用户名:</b>
                             </td>
                             <td align="left">
+                                <@spring.bind "loginFormVO.username"/>
                                 <input type="textfield" class="ipt_1"
-                                       name="username" value="${username!}"/>
+                                       name="${spring.status.expression}"
+                                       value="${spring.status.value?default("")}"/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>
@@ -45,9 +50,12 @@
                                 <b>密 码:</b>
                             </td>
                             <td align="left">
+                                <@spring.bind "loginFormVO.password"/>
                                 <input type="password" class="ipt_1"
-                                       name="password" value=""/>
-                                <span>${errorMsg!}</span>
+                                       name="${spring.status.expression}" value=""/>
+                                <#list spring.status.errorMessages as error>
+                                <span>${error}</span>
+                                </#list>
                             </td>
                         </tr>
                         <tr>
