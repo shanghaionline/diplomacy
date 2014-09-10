@@ -25,4 +25,10 @@ public interface UserDao {
     List<User> listUserByMeta(UserStatus status, String key, String value);
 
     PagerBean<User> queryUser(String query, int offset, int limit);
+    
+    PagerBean<User> queryUser(UserStatus status, String query, int offset, int limit);
+    
+    PagerBean<User> listUserByStatus(UserStatus status, int offset, int limit);
+    
+    
 }

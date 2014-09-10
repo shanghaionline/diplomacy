@@ -12,7 +12,7 @@
         <a href="/association/diplomacy/help"><h1>站内互动</h1></a>
 
         <div class="interactive_links">
-            <a href="/association/mangr"><img src="${requestContext.contextPath}/static/images/btn_right_0.gif" alt=""/></a>
+            <a href="${requestContext.contextPath}/admin/"><img src="${requestContext.contextPath}/static/images/btn_right_0.gif" alt=""/></a>
             <a href="${requestContext.contextPath}/message/sendmessage?receiver=admin"><img
                     src="${requestContext.contextPath}/static/images/btn_right_1.gif" alt=""/></a>
             <a href="${requestContext.contextPath}/message/sendmessage?receiver=admin"><img

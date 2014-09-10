@@ -17,6 +17,10 @@ public interface UserService {
     PagerBean<User> queryUser(String query, int page, int size);
 
     User handleInvited(Long inviterId, String nicename, String phone, String email);
+    
+    PagerBean<User> listUnvalited(int page, int size);
+    
+    PagerBean<User> listUser(int page, int size);
 
     String postInvited(User user);
 
@@ -43,4 +47,5 @@ public interface UserService {
     User saveUserInfo(User user, String nicename, String email);
 
     User changePhone(User user, String phone);
+    
 }

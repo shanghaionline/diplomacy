@@ -39,7 +39,7 @@
 </#list>
 </table>
 <#list 1..userList.page as pg>
-<a href="${requestContext.contextPath}/user/select-user/q${query}/${pageNum}">${pg}</a>
+<a href="${requestContext.contextPath}/user/select-user/q${query}/${pg}">${pg}</a>
 </#list>
 </body>
 </html>

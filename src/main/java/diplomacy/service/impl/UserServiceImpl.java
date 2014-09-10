@@ -24,7 +24,7 @@ import diplomacy.vo.PagerBean;
 public class UserServiceImpl implements UserService {
     static final String[] PERMISSIONS = new String[]{
             "PERM_HANDLE_INVITATION", "PERM_SEND_SINGLE", "PERM_SEND_MULTIPLE", "PERM_MESSAGE_MEMBER",
-            "PERM_MESSAGE_DIRECTOR", "PERM_MESSAGE_CHAIRMAN"};
+            "PERM_MESSAGE_DIRECTOR", "PERM_MESSAGE_CHAIRMAN", "PERM_OPTER_ADMIN"};
     static final Map<String, String[]> GROUP_PERMS = new HashMap<String, String[]>();
 
     static {
@@ -112,7 +112,21 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    
     @Override
+	public PagerBean<User> listUnvalited(int page, int size) {
+    	page = page <= 0 ? 1 : page;
+        return userDao.listUserByStatus(UserStatus.UNVALITED, (page - 1) * size, size);
+	}
+
+    
+	@Override
+	public PagerBean<User> listUser(int page, int size) {
+		page = page <= 0 ? 1 : page;
+        return userDao.listUserByStatus(UserStatus.ENABLED, (page - 1) * size, size);
+	}
+
+	@Override
     public String postInvited(User user) {
         String checksum = PasswordUtil.invateHash(user.getId());
         return String.format("%d/%s", user.getId(), checksum);

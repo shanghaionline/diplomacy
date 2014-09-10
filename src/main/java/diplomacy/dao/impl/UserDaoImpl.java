@@ -84,10 +84,16 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
     @Override
     public PagerBean<User> queryUser(String query, int offset, int limit) {
-        PagerBean<User> ret = new PagerBean<User>();
+        return queryUser(UserStatus.ENABLED, query, offset, limit);
+    }
+
+    @Override
+	public PagerBean<User> queryUser(UserStatus status, String query,
+			int offset, int limit) {
+    	PagerBean<User> ret = new PagerBean<User>();
         HibernateTemplate template = getHibernateTemplate();
-        DetachedCriteria criteria = queryCriteriaUser(query);
-        DetachedCriteria countCriteria = queryCriteriaUser(query);
+        DetachedCriteria criteria = queryCriteriaUser(status, query);
+        DetachedCriteria countCriteria = queryCriteriaUser(status, query);
         criteria.addOrder(Property.forName("login").asc());
         countCriteria.setProjection(Projections.rowCount());
         ret.setAllCount((Long) template.findByCriteria(countCriteria).get(0));
@@ -97,16 +103,22 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
         ret.setStart(offset);
         ret.setSize(limit);
         return ret;
-    }
+	}
 
-    private DetachedCriteria queryCriteriaUser(String query) {
+	private DetachedCriteria queryCriteriaUser(UserStatus status, String query) {
         DetachedCriteria criteria = DetachedCriteria.forClass(User.class);
         if (query != null && !query.trim().isEmpty()) {
             criteria.add(Restrictions.or(Restrictions.like("login", "%" + query + "%"),
                     Restrictions.like("nicename", "%" + query + "%")));
         }
-        criteria.add(Restrictions.eq("status", UserStatus.ENABLED));
+        criteria.add(Restrictions.eq("status", status));
         return criteria;
     }
 
+	@Override
+	public PagerBean<User> listUserByStatus(UserStatus status, int offset, int limit) {
+		return queryUser(status, null, offset, limit);
+	}
+    
+    
 }
