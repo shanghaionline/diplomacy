@@ -2,6 +2,7 @@ package diplomacy.action;
 
 import diplomacy.validator.*;
 import diplomacy.vo.*;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -213,7 +214,7 @@ public class UserAct {
         return "user/select-user";
     }
 
-
+   
     public void setUserService(UserService userService) {
         this.userService = userService;
     }

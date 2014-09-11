@@ -11,7 +11,7 @@
 	      <a href="@routes.ArtcMangr.listArticles(1)">资料管理</a>
 	    </li>
 	    <li>
-	      <a href="@routes.Message.listReceive(1)">返回前台</a>
+	      <a href="${requestContext.contextPath}/message/inbox/1">返回前台</a>
 	    </li>
 	  </ul>
 	</div>

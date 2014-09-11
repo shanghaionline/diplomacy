@@ -26,7 +26,7 @@
     		<td>${item.inviter.login}</td>
     		<td>${item.registered?string}</td>
     		<td>
-      		<a href="/association/mangr/user/apply-invita/14">通过</a>
+      		<a href="${requestContext.contextPath}/admin/apply-invite/${item.id}"">通过</a>
       		<a href="${requestContext.contextPath}/admin/handle-invite/delete/${item.id}">拒绝</a>
     		</td>
   		</tr>

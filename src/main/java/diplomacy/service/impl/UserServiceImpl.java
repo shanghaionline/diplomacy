@@ -111,7 +111,6 @@ public class UserServiceImpl implements UserService {
         userDao.refresh(user);
         return user;
     }
-
     
     @Override
 	public PagerBean<User> listUnvalited(int page, int size) {
@@ -257,5 +256,21 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+	@Override
+	@Transactional(readOnly = false)
+	public User modifyUser(User user) {
+		userDao.save(user);
+		return user;
+	}
 
+	@Override
+	@Transactional(readOnly = false)
+	public void Delete(Long userId) {
+		User user = userDao.getUserById(userId);
+		if(user != null && user.getStatus() == UserStatus.ENABLED){
+			userDao.delete(user);
+		}
+		
+	}
+	
 }

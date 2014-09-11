@@ -1,25 +1,11 @@
 package diplomacy.vo;
 
-public class ApplyInviteFormVO {
-	private String login;
-	private String password;
+public class ModifyUserFormVO {
 	private String group;
 	private String nicename;
 	private String phone;
 	private String email;
 	
-	public String getLogin() {
-		return login;
-	}
-	public void setLogin(String login) {
-		this.login = login;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
 	public String getGroup() {
 		return group;
 	}
@@ -44,5 +30,6 @@ public class ApplyInviteFormVO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	
 }

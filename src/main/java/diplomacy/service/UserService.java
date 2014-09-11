@@ -48,4 +48,7 @@ public interface UserService {
 
     User changePhone(User user, String phone);
     
+    User modifyUser(User user);
+    
+    void Delete(Long userId);
 }

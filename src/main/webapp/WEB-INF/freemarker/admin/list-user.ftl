@@ -28,9 +28,9 @@
     			<td>${item.email}</td>
     			<td>${item.registered?string}</td>
     			<td>
-      				<a href="/association/mangr/user/show-member/10">查看</a>
-      				<a href="/association/mangr/user/edit-member/10">编辑</a>
-      				<a href="/association/mangr/user/delete-member/10">删除</a>
+      				<a href="${requestContext.contextPath}/admin/show-listuser/${item.id}">查看</a>
+      				<a href="${requestContext.contextPath}/admin/modify-user/${item.id}">编辑</a>
+      				<a href="${requestContext.contextPath}/admin/list-user/delete/${item.id}">删除</a>
     			</td>
   			</tr>
   			</#list>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import diplomacy.dao.UserDao;
 import diplomacy.entity.User;
 import diplomacy.entity.UserMeta;
+import diplomacy.entity.status.MessageStatus;
 import diplomacy.entity.status.UserStatus;
 import diplomacy.vo.PagerBean;
 
@@ -35,8 +36,8 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
     @Override
     public void delete(User user) {
-        // TODO Auto-generated method stub
-
+    	user.setStatus(UserStatus.DELETED);
+        getHibernateTemplate().update(user);
     }
 
     @Override
@@ -114,6 +115,8 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
         criteria.add(Restrictions.eq("status", status));
         return criteria;
     }
+	
+	
 
 	@Override
 	public PagerBean<User> listUserByStatus(UserStatus status, int offset, int limit) {
