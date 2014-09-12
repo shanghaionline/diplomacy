@@ -1,5 +1,6 @@
 package diplomacy.service.impl;
 
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import diplomacy.dao.ContentDao;
@@ -9,6 +10,7 @@ import diplomacy.entity.status.ContentStatus;
 import diplomacy.service.ContentService;
 import diplomacy.vo.PagerBean;
 
+@Service("contentService")
 public class ContentServiceImpl implements ContentService {
 
     private ContentDao contentDao;
@@ -34,13 +36,20 @@ public class ContentServiceImpl implements ContentService {
     @Transactional(readOnly = false)
     public Content save(User user, Content content) {
         contentDao.save(content);
-        contentDao.refresh(content);
         return content;
     }
-
+    
+    
     @Override
-    public PagerBean<Content> query(String q, int offset, int limit) {
-        return contentDao.query(q, offset, limit);
+	public Content get(Long id) {
+    	Content content = contentDao.get(id);
+		return content;
+	}
+
+	@Override
+    public PagerBean<Content> query(String q, int page, int size) {
+    	page = page <= 0 ? 1 : page;
+        return contentDao.query(q, (page - 1) * size, size);
     }
 
     public void setContentDao(ContentDao contentDao) {

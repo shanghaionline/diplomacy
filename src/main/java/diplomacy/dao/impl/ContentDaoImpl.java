@@ -9,12 +9,14 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate4.HibernateTemplate;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import diplomacy.dao.ContentDao;
 import diplomacy.entity.Content;
 import diplomacy.entity.status.ContentStatus;
 import diplomacy.vo.PagerBean;
 
+@Repository("contentDao")
 public class ContentDaoImpl extends HibernateDaoSupport implements ContentDao {
 
     @Override

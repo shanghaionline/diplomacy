@@ -12,14 +12,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
+import diplomacy.entity.Content;
 import diplomacy.entity.User;
+import diplomacy.entity.status.ContentStatus;
 import diplomacy.entity.status.UserStatus;
+import diplomacy.service.ContentService;
 import diplomacy.service.UserService;
 import diplomacy.validator.ApplyInviteFormValidator;
+import diplomacy.validator.ContentFormValidator;
 import diplomacy.validator.FixValidator;
 import diplomacy.validator.ModifyUserFormValidator;
 import diplomacy.vo.ApplyInviteFormVO;
+import diplomacy.vo.ContentFormVO;
 import diplomacy.vo.ModifyUserFormVO;
 import diplomacy.vo.PagerBean;
 
@@ -29,11 +35,12 @@ import diplomacy.vo.PagerBean;
 public class MainAdminAct {
 	
 	private UserService userService;
+	private ContentService contentService;
 	
 	@InitBinder
     public void initBinder(WebDataBinder binder) {
         Validator fix = new FixValidator(new Validator[]{
-        		new ApplyInviteFormValidator(), new ModifyUserFormValidator()
+        		new ApplyInviteFormValidator(), new ModifyUserFormValidator(), new ContentFormValidator()
         });
         binder.setValidator(fix);
     }
@@ -160,9 +167,97 @@ public class MainAdminAct {
 		return "redirect:/admin/list-user/1";
 	}
 	
+	
+	@RequestMapping(value = "/list-content/{page}")
+	public String listContent(ModelMap model, @PathVariable Integer page){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+        PagerBean<Content> contentList = contentService.query(null, page, 20);
+        model.addAttribute("user", user);
+        model.addAttribute("contentList", contentList);
+		return "admin/list-content";
+	}
+	
+	@RequestMapping(value = "/create-content", method = RequestMethod.GET)
+	public String createContent(ModelMap model){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+        model.addAttribute("user", user);
+        if(model.get("contentFormVO") == null)model.addAttribute("contentFormVO", new ContentFormVO());
+		return "admin/create-content";
+	}
+	
+	@RequestMapping(value = "/create-content", method = RequestMethod.POST)
+	public String createContent(@Valid ContentFormVO contentFormVO, BindingResult result, ModelMap model){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+        if (result.hasErrors()) return  createContent(model);
+        Content content = contentService.create(user, contentFormVO.getTitle(), contentFormVO.getContent(), contentFormVO.getAuthor(),
+        		contentFormVO.getSource(), contentFormVO.getSummary());
+		return "redirect:/admin/list-content/1";
+	}
+            
+	
+	@RequestMapping(value = "/modify-content/{contentId}", method = RequestMethod.GET)
+	public String modifyContent(ModelMap model, @PathVariable Long contentId){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+        Content modifyContent = contentService.get(contentId);
+        if(modifyContent == null || !modifyContent.getStatus().equals(ContentStatus.ENABLED))return "common/error";
+        model.addAttribute("modifyContent", modifyContent);
+        if(model.get("contentFormVO") == null){
+        	model.addAttribute("contentFormVO", new ContentFormVO());
+        }
+		return "admin/modify-content";
+	}
+	
+	@RequestMapping(value = "/modify-content/{contentId}", method = RequestMethod.POST)
+	public String modifyContent(@Valid ContentFormVO contentFormVO, BindingResult result, ModelMap model, @PathVariable Long contentId){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+        if (result.hasErrors()) {
+            return modifyContent(model, contentId);
+        }
+        Content modifyContent = contentService.get(contentId);
+        if(modifyContent == null) return "common/error";
+        modifyContent.setTitle(contentFormVO.getTitle());
+        modifyContent.setSource(contentFormVO.getSource());
+        modifyContent.setAuthor(contentFormVO.getAuthor());
+        modifyContent.setContent(contentFormVO.getContent());
+        modifyContent.setSummary(contentFormVO.getSummary());
+        modifyContent = contentService.save(user, modifyContent);
+        return "redirect:/admin/list-content/1";
+	}
+	
+     /*
+	
+	@RequestMapping(value = "/modify-user/{userId}", method = RequestMethod.POST)
+	public String modifyUser(@Valid ModifyUserFormVO modifyUserFormVO, BindingResult result, ModelMap model, @PathVariable Long userId){
+		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+        if (user == null) return "common/error";
+		if (result.hasErrors()) {
+            return modifyUser(model, userId);
+        }
+		User modifyUser = userService.get(userId);
+		if(modifyUser == null) return "common/error";
+		modifyUser.setNicename(modifyUserFormVO.getNicename());
+		modifyUser.setGroup(modifyUserFormVO.getGroup());
+		modifyUser.setEmail(modifyUserFormVO.getEmail());
+		modifyUser.setPhone(modifyUserFormVO.getPhone());
+		modifyUser = userService.modifyUser(modifyUser);
+		return "redirect:/admin/list-user/1";
+	}
+     */   
+	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-	
 
+
+	public void setContentService(ContentService contentService) {
+		this.contentService = contentService;
+	}
+	
+	
+	
 }

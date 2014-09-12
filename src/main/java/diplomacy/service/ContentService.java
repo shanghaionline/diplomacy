@@ -10,5 +10,7 @@ public interface ContentService {
 
     Content save(User user, Content content);
 
-    PagerBean<Content> query(String q, int offset, int limit);
+    PagerBean<Content> query(String q, int page, int size);
+    
+    Content get(Long id);
 }
