@@ -96,4 +96,10 @@
     </bean>
     <tx:annotation-driven/>
 
+    <!--mobile message service-->
+    <bean id="mobileMessageService" class="diplomacy.service.MobileMessageService">
+        <property name="account" value=""/>
+        <property name="password" value=""/>
+    </bean>
+
 </beans>
