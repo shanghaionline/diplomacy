@@ -13,4 +13,6 @@ public interface ContentService {
     PagerBean<Content> query(String q, int page, int size);
     
     Content get(Long id);
+    
+    void delete (Long contentId);
 }

@@ -29,9 +29,9 @@
 			<td>${item.created?string}</td>
 			<td>${item.modified?string}</td>
 			<td>
-      		<a target="_blank" href="/association/article/show-article/6">查看</a>
+      		<a target="_blank" href="${requestContext.contextPath}/content/show-content/${item.id}">查看</a>
       		<a href="${requestContext.contextPath}/admin/modify-content/${item.id}">编辑</a>
-      		<a href="/association/mangr/artc/delete-article/6">删除</a>
+      		<a href="${requestContext.contextPath}/admin/list-content/delete/${item.id}">删除</a>
    			</td>
   		  </tr>
   		  </#list>

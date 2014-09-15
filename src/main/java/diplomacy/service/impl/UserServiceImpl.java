@@ -265,7 +265,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = false)
-	public void Delete(Long userId) {
+	public void delete(Long userId) {
 		User user = userDao.getUserById(userId);
 		if(user != null && user.getStatus() == UserStatus.ENABLED){
 			userDao.delete(user);

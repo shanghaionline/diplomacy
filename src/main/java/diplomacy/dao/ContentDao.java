@@ -1,6 +1,7 @@
 package diplomacy.dao;
 
 import diplomacy.entity.Content;
+import diplomacy.entity.User;
 import diplomacy.vo.PagerBean;
 
 public interface ContentDao {

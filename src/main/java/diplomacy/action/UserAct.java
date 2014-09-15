@@ -1,5 +1,7 @@
 package diplomacy.action;
 
+import java.net.URLEncoder;
+
 import diplomacy.validator.*;
 import diplomacy.vo.*;
 
@@ -204,9 +206,10 @@ public class UserAct {
     }
 
 
-    @RequestMapping(value = "/select-user/q{query}/{page}")
+    @RequestMapping(value = "/select-user/q{query}/{page}", method = RequestMethod.GET)
     public String selectUser(ModelMap model, @PathVariable String query, @PathVariable Integer page) {
-        if (page == null) page = 1;
+    	User user = userService.perm((Long) model.get("SessionUserId"));
+    	if (page == null) page = 1;
         PagerBean<User> list = userService.queryUser(query, page, 20);
         model.addAttribute("userList", list);
         model.addAttribute("pageNum", page);
@@ -214,7 +217,6 @@ public class UserAct {
         return "user/select-user";
     }
 
-   
     public void setUserService(UserService userService) {
         this.userService = userService;
     }

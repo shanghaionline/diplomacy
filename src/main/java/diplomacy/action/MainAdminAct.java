@@ -163,7 +163,7 @@ public class MainAdminAct {
 	public String deleteUser(ModelMap model, @PathVariable Long userId){
 		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
         if (user == null) return "common/error";
-        userService.Delete(userId);;
+        userService.delete(userId);;
 		return "redirect:/admin/list-user/1";
 	}
 	
@@ -229,30 +229,17 @@ public class MainAdminAct {
         return "redirect:/admin/list-content/1";
 	}
 	
-     /*
-	
-	@RequestMapping(value = "/modify-user/{userId}", method = RequestMethod.POST)
-	public String modifyUser(@Valid ModifyUserFormVO modifyUserFormVO, BindingResult result, ModelMap model, @PathVariable Long userId){
+	@RequestMapping(value = "list-content/delete/{contentId}")
+	public String deleteContent(ModelMap model, @PathVariable Long contentId){
 		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
         if (user == null) return "common/error";
-		if (result.hasErrors()) {
-            return modifyUser(model, userId);
-        }
-		User modifyUser = userService.get(userId);
-		if(modifyUser == null) return "common/error";
-		modifyUser.setNicename(modifyUserFormVO.getNicename());
-		modifyUser.setGroup(modifyUserFormVO.getGroup());
-		modifyUser.setEmail(modifyUserFormVO.getEmail());
-		modifyUser.setPhone(modifyUserFormVO.getPhone());
-		modifyUser = userService.modifyUser(modifyUser);
-		return "redirect:/admin/list-user/1";
+        contentService.delete(contentId);
+		return "redirect:/admin/list-content/1";
 	}
-     */   
 	
 	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
-
 
 	public void setContentService(ContentService contentService) {
 		this.contentService = contentService;

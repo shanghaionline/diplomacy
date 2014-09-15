@@ -7,7 +7,7 @@
     </script>
     <script>
         function queryContact() {
-            var url = "/association/user/list-contact/q%23/1";
+            var url = "${requestContext.contextPath}/user/select-user/q%23/1";
             var v = document.getElementById("query_key").value;
             window.location.href = url.replace("%23", v);
         }
@@ -20,7 +20,7 @@
     </script>
 </head>
 <body>
-<input type="textfield" id="query" value="${query}"/>
+<input type="textfield" id="query_key" value="${query}"/>
 <a href="#" onClick="queryContact()">查询</a>
 <table width="300px" border="1">
     <tr>

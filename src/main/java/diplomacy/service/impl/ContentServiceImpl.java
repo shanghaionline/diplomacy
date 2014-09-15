@@ -7,6 +7,7 @@ import diplomacy.dao.ContentDao;
 import diplomacy.entity.Content;
 import diplomacy.entity.User;
 import diplomacy.entity.status.ContentStatus;
+import diplomacy.entity.status.UserStatus;
 import diplomacy.service.ContentService;
 import diplomacy.vo.PagerBean;
 
@@ -51,7 +52,16 @@ public class ContentServiceImpl implements ContentService {
     	page = page <= 0 ? 1 : page;
         return contentDao.query(q, (page - 1) * size, size);
     }
-
+	
+	@Override
+	@Transactional(readOnly = false)
+	public void delete(Long contentId) {
+		Content content = contentDao.get(contentId);
+		if(content != null && content.getStatus() == ContentStatus.ENABLED){
+			contentDao.delete(content);
+		}
+	}
+	
     public void setContentDao(ContentDao contentDao) {
         this.contentDao = contentDao;
     }
