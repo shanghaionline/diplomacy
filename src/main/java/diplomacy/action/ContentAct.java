@@ -34,7 +34,7 @@ public class ContentAct {
 
 	@RequestMapping(value = "/show-content/{contentId}", method = RequestMethod.GET)
 	public String showContent(ModelMap model, @PathVariable long contentId){
-		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+		User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
         model.addAttribute("user", user);
         Content content = contentService.get(contentId);
@@ -45,7 +45,7 @@ public class ContentAct {
 	
 	@RequestMapping(value = "/list/q{query}/{page}", method = RequestMethod.GET)
 	public String content(ModelMap model, @PathVariable String query, @PathVariable Integer page){
-		User user = userService.perm((Long) model.get("SessionUserId"), "PERM_OPTER_ADMIN");
+		User user = userService.perm((Long) model.get("SessionUserId"));
         if (user == null) return "common/error";
         PagerBean<Content> content = contentService.query(query, page, 5);
         model.addAttribute("user", user);
