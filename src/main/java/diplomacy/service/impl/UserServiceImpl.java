@@ -260,6 +260,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional(readOnly = false)
 	public User modifyUser(User user) {
 		userDao.save(user);
+        refreshGroup(user);
 		return user;
 	}
 

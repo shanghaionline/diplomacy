@@ -1,3 +1,4 @@
+<#import "../common/custom_macro.ftl" as customMacro/>
 <html>
   <#include "../include/admin-main.ftl"/>
   <body>
@@ -22,7 +23,7 @@
   			<#list userList.list as item>
   			<tr>
     			<td>${item.login}</td>
-    			<td>${item.group}</td>
+    			<td><@customMacro.groupName item.group/></td>
     			<td>${item.nicename}</td>
     			<td>${item.phone}</td>
     			<td>${item.email}</td>

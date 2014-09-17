@@ -2,6 +2,7 @@ package diplomacy.action;
 
 import javax.validation.Valid;
 
+import diplomacy.util.PasswordUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -95,7 +96,7 @@ public class MainAdminAct {
 		User data = userService.get(userId);
 		if(data == null) return "common/error";
 		data.setLogin(applyInviteFormVO.getLogin());
-		data.setPasswd(applyInviteFormVO.getPassword());
+		data.setPasswd(PasswordUtil.password(applyInviteFormVO.getPassword()));
 		data.setNicename(applyInviteFormVO.getNicename());
 		data.setGroup(applyInviteFormVO.getGroup());
 		data.setEmail(applyInviteFormVO.getEmail());

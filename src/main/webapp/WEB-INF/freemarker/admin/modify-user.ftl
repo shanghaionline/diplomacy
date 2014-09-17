@@ -1,4 +1,4 @@
-<#import "../common/custem_macro.ftl" as customMacro/>
+<#import "../common/custom_macro.ftl" as customMacro/>
 <html>
   <#include "../include/admin-main.ftl"/>
   <body>

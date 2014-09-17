@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<#import "../common/custem_macro.ftl" as customMacro/>
+<#import "../common/custom_macro.ftl" as customMacro/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="cn">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -65,23 +65,29 @@
                                     </#list>
                                 </td>
                             </tr>
-
+                            <@customMacro.hasPerm user=user perm="PERM_SEND_MULTIPLE">
                             <tr>
                                 <td>&nbsp;</td>
                                 <td align="left">
                                     <@spring.bind "sendMsgFormVO.perm"/>
                                     <select id="group_id_select" name="${spring.status.expression}">
                                         <@customMacro.optionTag value="" selected=spring.status.value?default("")>单会员</@customMacro.optionTag>
+                                        <@customMacro.hasPerm user=user perm="PERM_MESSAGE_MEMBER">
                                         <@customMacro.optionTag value="PERM_MESSAGE_MEMBER" selected=spring.status.value?default("")>会员</@customMacro.optionTag>
+                                        </@customMacro.hasPerm>
+                                        <@customMacro.hasPerm user=user perm="PERM_MESSAGE_DIRECTOR">
                                         <@customMacro.optionTag value="PERM_MESSAGE_DIRECTOR" selected=spring.status.value?default("")>理事</@customMacro.optionTag>
+                                        </@customMacro.hasPerm>
+                                        <@customMacro.hasPerm user=user perm="PERM_MESSAGE_CHAIRMAN">
                                         <@customMacro.optionTag value="PERM_MESSAGE_CHAIRMAN" selected=spring.status.value?default("")>会长</@customMacro.optionTag>
+                                        </@customMacro.hasPerm>
                                     </select>
                                     <#list spring.status.errorMessages as error>
                                     <span>${error}</span>
                                     </#list>
                                 </td>
                             </tr>
-
+                            </@customMacro.hasPerm>
                             <tr>
                                 <td>标&nbsp;&nbsp;题:</td>
                                 <td align="left">

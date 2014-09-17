@@ -82,14 +82,13 @@
 
                         <div class="invitebox">
                             <p>这是您的专用邀请链接，请通过QQ或 MSN 发送给好友：</p>
-                            <textarea name="textarea" id="textarea" rows="3" class="ipt_4">我最近在上海公共外交协会网站注册了用户，您也来加入吧！http://spda.org.cn/diplomacy/user/invite/${user.id}
-                                /${checksum}</textarea>
+                            <textarea name="textarea" id="textarea" rows="3" class="ipt_4">我最近在上海公共外交协会网站注册了用户，您也来加入吧！http://spda.org.cn/diplomacy/user/invite/${user.id}/${checksum}</textarea>
                             <input type="button" name="copy" id="copy" value="" class="btn_copy"/>
                         </div>
                     </div>
+                    <!--
                     <div class="invitestep1">
                         <img src="${requestContext.contextPath}/static/images/icon_invite_2.gif" class="icon1"/>
-
                         <div class="invitebox">
                             <span>分享到</span>
 
@@ -114,6 +113,7 @@
                             </script>
                         </div>
                     </div>
+                    -->
                 </div>
             <#include "../include/right_include.ftl">
             </div>

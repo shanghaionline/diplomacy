@@ -1,3 +1,4 @@
+<#import "../common/custom_macro.ftl" as customMacro/>
 <div class="login_right">
     <div class="user_info">
         <p>用户${user.login}，欢迎您登录</p>
@@ -12,7 +13,9 @@
         <a href="/association/diplomacy/help"><h1>站内互动</h1></a>
 
         <div class="interactive_links">
+            <@customMacro.hasPerm user=user perm="PERM_OPTER_ADMIN">
             <a href="${requestContext.contextPath}/admin/"><img src="${requestContext.contextPath}/static/images/btn_right_0.gif" alt=""/></a>
+            </@customMacro.hasPerm>
             <a href="${requestContext.contextPath}/message/sendmessage?receiver=admin"><img
                     src="${requestContext.contextPath}/static/images/btn_right_1.gif" alt=""/></a>
             <a href="${requestContext.contextPath}/message/sendmessage?receiver=admin"><img
