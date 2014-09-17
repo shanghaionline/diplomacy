@@ -1,3 +1,4 @@
+<#import "../common/custem_macro.ftl" as customMacro/>
 <html>
   <#include "../include/admin-main.ftl"/>
   <body>
@@ -36,13 +37,13 @@
     			<td>
     				<@spring.bind "applyInviteFormVO.group"/>
       				<select name="${spring.status.expression}">
-						<option value="MEMBER" selected="true">会员</option>
-						<option value="DIRECTOR">理事</option>
-						<option value="CHAIRMAN">会长</option>
-						<option value="ADMIN">管理员</option>
+                        <@customMacro.optionTag value="MEMBER" selected=spring.status.value?default("MEMBER")>会员</@customMacro.optionTag>
+                        <@customMacro.optionTag value="DIRECTOR" selected=spring.status.value?default("MEMBER")>理事</@customMacro.optionTag>
+                        <@customMacro.optionTag value="CHAIRMAN" selected=spring.status.value?default("MEMBER")>会长</@customMacro.optionTag>
+                        <@customMacro.optionTag value="ADMIN" selected=spring.status.value?default("MEMBER")>管理员</@customMacro.optionTag>
 					</select>
 					<#list spring.status.errorMessages as error>
-					<span style="color:red;">${error}</span>
+					<span style="color:red; ">${error}</span>
 					</#list>
 				</td>
 			<tr>
@@ -79,7 +80,7 @@
 					<@spring.bind "applyInviteFormVO.email"/>
 					<input type="textfield" name="${spring.status.expression}" value="${spring.status.value?default(data.email)}"/>
 					<#list spring.status.errorMessages as error>
-					<span style="color:red;">${error}</span>
+					<span style="color:#ff0000;">${error}</span>
 					</#list>
     			</td>
 			</tr>

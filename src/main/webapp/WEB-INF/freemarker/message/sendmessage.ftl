@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<#import "../common/custem_macro.ftl" as customMacro/>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="cn">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -70,10 +71,10 @@
                                 <td align="left">
                                     <@spring.bind "sendMsgFormVO.perm"/>
                                     <select id="group_id_select" name="${spring.status.expression}">
-                                        <option value="">单会员</option>
-                                        <option value="PERM_MESSAGE_MEMBER">会员</option>
-                                        <option value="PERM_MESSAGE_DIRECTOR">理事</option>
-                                        <option value="PERM_MESSAGE_CHAIRMAN">会长</option>
+                                        <@customMacro.optionTag value="" selected=spring.status.value?default("")>单会员</@customMacro.optionTag>
+                                        <@customMacro.optionTag value="PERM_MESSAGE_MEMBER" selected=spring.status.value?default("")>会员</@customMacro.optionTag>
+                                        <@customMacro.optionTag value="PERM_MESSAGE_DIRECTOR" selected=spring.status.value?default("")>理事</@customMacro.optionTag>
+                                        <@customMacro.optionTag value="PERM_MESSAGE_CHAIRMAN" selected=spring.status.value?default("")>会长</@customMacro.optionTag>
                                     </select>
                                     <#list spring.status.errorMessages as error>
                                     <span>${error}</span>

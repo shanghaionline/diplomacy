@@ -6,6 +6,7 @@ import java.util.Map;
 import diplomacy.validator.FixValidator;
 import diplomacy.validator.SendMsgFormValidator;
 import diplomacy.vo.SendMsgFormVO;
+import org.codehaus.jackson.map.annotate.JsonView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -38,13 +39,11 @@ public class MessageAct {
     }
 
     @RequestMapping(value = "/sendvalidcode")
-    @ResponseBody
-    public Map<String, String> sendValidCode(String phone) {
-        Map<String, String> ret = new HashMap<String, String>();
+    public String sendValidCode(ModelMap model, String phone) {
         messageService.sendPhoneValidCode(phone);
-        ret.put("status", "success");
-        ret.put("phone", phone);
-        return ret;
+        model.addAttribute("status", "success");
+        model.addAttribute("data", phone);
+        return "common/json_result";
     }
 
     @RequestMapping(value = "/sendmessage", method = RequestMethod.POST)

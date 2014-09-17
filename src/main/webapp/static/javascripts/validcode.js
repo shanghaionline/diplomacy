@@ -5,6 +5,6 @@ $(document).ready(function () {
             if (data.status == "success") {
                 alert("验证码发送成功");
             }
-        });
+        }, "json");
     });
 });
