@@ -217,7 +217,7 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = false)
     public void postMessageNotice(int limit) {
         List<MessageBox> list = messageDao.listUnNoticedMessage(limit);
         for (MessageBox item : list) {
