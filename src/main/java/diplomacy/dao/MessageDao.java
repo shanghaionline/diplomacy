@@ -7,6 +7,8 @@ import diplomacy.entity.MessageMeta;
 import diplomacy.entity.User;
 import diplomacy.vo.PagerBean;
 
+import java.util.List;
+
 public interface MessageDao {
     void save(Message message);
 
@@ -31,6 +33,10 @@ public interface MessageDao {
     PagerBean<Message> listMessageBySender(User user, int offset, int limit);
 
     PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit);
+
+    List<Message> listUnSendValidCode(int limit);
+
+    List<MessageBox> listUnNoticedMessage(int limit);
 
     MessageBox getMessageBoxById(long msgId);
 

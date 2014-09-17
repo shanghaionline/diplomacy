@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 
 import diplomacy.entity.*;
 import diplomacy.entity.status.UserStatus;
+import diplomacy.service.MobileMessageService;
 import diplomacy.vo.PagerBean;
 
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
     private MessageDao messageDao;
     private UserDao userDao;
     private UserService userService;
+    private MobileMessageService mobileMessageService;
 
     @Override
     @Transactional(readOnly = false)
@@ -195,6 +197,45 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
         }
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void postValidCode(int limit) {
+        List<Message> list = messageDao.listUnSendValidCode(limit);
+        for (Message item : list) {
+            MessageMeta meta = item.getMetas().get("validcode_target");
+            if (meta == null) continue;
+            try {
+                int ret = mobileMessageService.sendMessage(meta.getValue(), item.getContent());
+                if (ret == 0) {
+                    item.setStatus(MessageStatus.READED);
+                    messageDao.save(item);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void postMessageNotice(int limit) {
+        List<MessageBox> list = messageDao.listUnNoticedMessage(limit);
+        for (MessageBox item : list) {
+            User user = item.getReceiver();
+            Message msg = item.getMessage();
+            if (user == null || user.getPhone() == null || msg == null) continue;
+            try {
+                int ret = mobileMessageService.sendMessage(user.getPhone(), msg.getTitle());
+                if (ret == 0) {
+                    item.setNoticed(true);
+                    messageDao.save(item);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private String makeValidCode() {
         Random r = new Random();
         return String.format("%04d", r.nextInt(10000));
@@ -217,4 +258,7 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
         this.userDao = userDao;
     }
 
+    public void setMobileMessageService(MobileMessageService mobileMessageService) {
+        this.mobileMessageService = mobileMessageService;
+    }
 }

@@ -129,6 +129,22 @@ public class MessageAct {
         return "redirect:/message/outbox/1";
     }
 
+    @RequestMapping(value = "/post-mobile-notice-message")
+    public String postMobileNoticeMessage(ModelMap model) {
+        model.addAttribute("status", "success");
+        model.addAttribute("data", "");
+        messageService.postMessageNotice(100);
+        return "common/json_result";
+    }
+
+    @RequestMapping(value = "/post-mobile-valid-code")
+    public String postMobileValidCode(ModelMap model) {
+        model.addAttribute("status", "success");
+        model.addAttribute("data", "");
+        messageService.postValidCode(200);
+        return "common/json_result";
+    }
+
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }

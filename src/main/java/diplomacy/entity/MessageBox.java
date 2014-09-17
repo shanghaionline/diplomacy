@@ -19,6 +19,7 @@ public class MessageBox {
     private User receiver;
     private Message message;
     private MessageStatus status;
+    private Boolean noticed;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,4 +59,11 @@ public class MessageBox {
         this.status = status;
     }
 
+    public Boolean getNoticed() {
+        return noticed;
+    }
+
+    public void setNoticed(Boolean noticed) {
+        this.noticed = noticed;
+    }
 }

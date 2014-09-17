@@ -31,4 +31,7 @@ public interface MessageService {
     void deleteMessage(User user, long[] ids);
 
     void deleteMessageBox(User user, long[] ids);
+
+    void postValidCode(int limit);
+    void postMessageNotice(int limit);
 }

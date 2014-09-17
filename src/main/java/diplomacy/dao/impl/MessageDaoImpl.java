@@ -76,6 +76,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         box.setMessage(message);
         box.setReceiver(receiver);
         box.setStatus(MessageStatus.UNREAD);
+        box.setNoticed(false);
         getHibernateTemplate().saveOrUpdate(box);
         return null;
     }
@@ -135,6 +136,28 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
         ret.setStart(offset);
         ret.setSize(limit);
         return ret;
+    }
+
+    @Override
+    public List<Message> listUnSendValidCode(int limit) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = DetachedCriteria.forClass(Message.class);
+        criteria.add(Restrictions.eq("msgType", MessageType.VALIDCODE));
+        criteria.add(Restrictions.eq("status", MessageStatus.UNSEND));
+        @SuppressWarnings("unchecked")
+        List<Message> list = (List<Message>)template.findByCriteria(criteria, 0, limit);
+        return list;
+    }
+
+    @Override
+    public List<MessageBox> listUnNoticedMessage(int limit) {
+        HibernateTemplate template = getHibernateTemplate();
+        DetachedCriteria criteria = DetachedCriteria.forClass(MessageBox.class);
+        criteria.add(Restrictions.eq("status", MessageStatus.UNREAD));
+        criteria.add(Restrictions.eq("noticed", false));
+        @SuppressWarnings("unchecked")
+        List<MessageBox> list = (List<MessageBox>)template.findByCriteria(criteria, 0, limit);
+        return list;
     }
 
     private DetachedCriteria queryCriteriaMessageBoxByReceiver(User user) {
