@@ -36,7 +36,7 @@ public class UserAct {
         });
         binder.setValidator(fix);
     }
-
+    
     @RequestMapping("/init")
     public String init() {
         userService.create("admin", "admin", UserStatus.ENABLED);
@@ -215,6 +215,11 @@ public class UserAct {
         model.addAttribute("pageNum", page);
         model.addAttribute("query", query == null ? "" : query);
         return "user/select-user";
+    }
+    
+    @RequestMapping("/help")
+    public String help(){
+    	 return "user/help";
     }
 
     public void setUserService(UserService userService) {

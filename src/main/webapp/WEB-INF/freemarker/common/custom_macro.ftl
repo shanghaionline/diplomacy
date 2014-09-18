@@ -20,3 +20,11 @@
     <#case "CHAIRMAN">会长<#break>
     </#switch>
 </#macro>
+
+<#macro channelTag val cur class1 class2>
+	<#if val = cur>
+	<#nested class1/>
+	<#else>
+	<#nested class2/>
+	</#if>
+</#macro>

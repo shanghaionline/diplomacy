@@ -10,7 +10,7 @@
                onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
     </div>
     <div class="interactive">
-        <a href="/association/diplomacy/help"><h1>站内互动</h1></a>
+        <a href="${requestContext.contextPath}/user/help"><h1>站内互动</h1></a>
 
         <div class="interactive_links">
             <@customMacro.hasPerm user=user perm="PERM_OPTER_ADMIN">
