@@ -1,5 +1,6 @@
-<#import "../custom_marco.ftl" as customMarco/>
-<#marco current>
+<#import "../common/custom_macro.ftl" as customMarco/>
+
+<#macro channelBar current>
 <div class="nav">
     <ul id="menu">
     	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
@@ -22,11 +23,11 @@
     	<a href="/association/diplomacy/site/member" class="${classValue}">会员风采</a>
     	</@customMarco.channelTag></li>
        
-        <li><@customMarco.channelTag 0 current "current" "" ; classValue>
+        <li><@customMarco.channelTag 1 current "current" "" ; classValue>
     	<a href="${requestContext.contextPath}/message/inbox/1" class="${classValue}">会员服务</a>
     	</@customMarco.channelTag></li>
         
-        <li><@customMarco.channelTag 0 current "current" "" ; classValue>
+        <li><@customMarco.channelTag 2 current "current" "" ; classValue>
     	<a href="${requestContext.contextPath}/content/list/q/1" class="${classValue}">资料库</a>
     	</@customMarco.channelTag></li>
        	 
@@ -39,4 +40,4 @@
     	</@customMarco.channelTag></li>
     </ul>
 </div>
-</#marco>
+</#macro>

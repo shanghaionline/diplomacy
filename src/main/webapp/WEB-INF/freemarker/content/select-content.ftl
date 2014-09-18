@@ -22,7 +22,8 @@
 		<div class="head">
 	  		<div class="flash"></div>
 		</div>
-		<#include "../include/top_include.ftl"/>
+		<#import "../include/top_include.ftl" as topInclude/>
+        <@topInclude.channelBar 2/>
 		<div class="content">
 			<div class="main">
 				<div class="document">

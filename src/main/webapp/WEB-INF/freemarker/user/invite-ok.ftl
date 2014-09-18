@@ -23,7 +23,8 @@
 	  <div class="flash">
 	  </div>
 	</div>
-	<#include "../include/top_include.ftl"/>
+      <#import "../include/top_include.ftl" as topInclude/>
+      <@topInclude.channelBar 3/>
 	<div class="content">
 	  <div class="main">
 感谢申请会员！耐心等候！

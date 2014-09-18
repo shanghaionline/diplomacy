@@ -30,7 +30,8 @@
             <div class="flash">
             </div>
         </div>
-    <#include "../include/top_include.ftl"/>
+    <#import "../include/top_include.ftl" as topInclude/>
+    <@topInclude.channelBar 1/>
         <div class="content">
             <div class="main">
                 <div class="login_left">
