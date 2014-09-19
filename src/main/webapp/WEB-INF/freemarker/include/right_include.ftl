@@ -7,7 +7,7 @@
                id="button"
                value="退出"
                class="btn_logout"
-               onClick="window.location.href='/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fsite%2Findex'"/>
+               onClick="window.location.href='${requestContext.contextPath}/user/logout'"/>
     </div>
     <div class="interactive">
         <a href="${requestContext.contextPath}/user/help"><h1>站内互动</h1></a>

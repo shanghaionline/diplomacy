@@ -1,0 +1,10 @@
+<html>
+<head>
+    <title>spda</title>
+    <script>
+        window.parent.location.href="${requestContext.contextPath}/message/inbox/1";
+    </script>
+</head>
+<body>
+</body>
+</html>

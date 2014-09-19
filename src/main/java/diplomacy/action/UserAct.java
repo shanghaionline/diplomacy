@@ -18,6 +18,7 @@ import diplomacy.service.MessageService;
 import diplomacy.service.UserService;
 import diplomacy.util.PasswordUtil;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
@@ -140,6 +141,12 @@ public class UserAct {
         }
         model.addAttribute("SessionUserId", user.getId());
         return "user/front_login_ok";
+    }
+
+    @RequestMapping(value = "/logout")
+    public String logout(ModelMap model) {
+        model.addAttribute("SessionUserId", -1L);
+        return "redirect:/user/login";
     }
     
     

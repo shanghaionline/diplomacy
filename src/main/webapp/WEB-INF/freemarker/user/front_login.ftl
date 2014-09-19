@@ -68,7 +68,7 @@
 	</tr>
 	<tr align="right">
 	  <th>
-	    <a href="/association/mangr/logout?back=%2Fassociation%2Fdiplomacy%2Fskip%3Furl%3D%252Fassociation%252Fdiplomacy%252Fsite%252Findex">
+	    <a href="#" onClick="window.parent.location.href='${requestContext.contextPath}/user/logout'">
 	      退出
 	    </a>
 	  </th>
