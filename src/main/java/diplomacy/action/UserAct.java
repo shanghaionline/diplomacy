@@ -118,6 +118,31 @@ public class UserAct {
         return "redirect:/message/inbox/1";
     }
 
+    @RequestMapping(value = "/front_login", method = RequestMethod.GET)
+    public String frontLogin(ModelMap model){
+    	User user = userService.perm((Long) model.get("SessionUserId"));
+    	if (model.get("loginFormVO") == null) {
+            model.addAttribute("loginFormVO", new LoginFormVO());
+        }
+    	if(user != null) model.addAttribute("user", user);
+    	return "user/front_login";
+    }
+    
+    @RequestMapping(value = "/front_login", method = RequestMethod.POST)
+    public String frontLogin(@Valid LoginFormVO loginFormVO, BindingResult result, ModelMap model){
+    	if (result.hasErrors()) {
+            return login(model);
+        }
+        User user = userService.login(loginFormVO.getUsername(), loginFormVO.getPassword());
+        if (user == null) {
+            result.rejectValue("username", null, "用户名或密码错误");
+            return frontLogin(model);
+        }
+        model.addAttribute("SessionUserId", user.getId());
+        return "user/front_login_ok";
+    }
+    
+    
     @RequestMapping("apply-invitation")
     public String applyInvitation(ModelMap model, Long userId,
                                   String username, String password, String group,
