@@ -4,23 +4,23 @@
 <div class="nav">
     <ul id="menu">
     	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/index" class="${classValue}">首 页</a>
+    	<a href="http://www.spda.org.cn/" class="${classValue}">首 页</a>
     	</@customMarco.channelTag></li>
     	
         <li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/news" class="${classValue}">新闻荟萃</a>
+    	<a href="http://www.spda.org.cn/node_73615.htm" class="${classValue}">新闻荟萃</a>
     	</@customMarco.channelTag></li>
     	
     	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/work" class="${classValue}">工作动态</a>
+    	<a href="http://www.spda.org.cn/node_73618.htm" class="${classValue}">工作动态</a>
     	</@customMarco.channelTag></li>
 
     	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/comm" class="${classValue}">对外交流</a>
+    	<a href="http://www.spda.org.cn/node_74056.htm" class="${classValue}">对外交流</a>
     	</@customMarco.channelTag></li>
     	
        	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/member" class="${classValue}">会员风采</a>
+    	<a href="http://www.spda.org.cn/node_81994.htm" class="${classValue}">会员风采</a>
     	</@customMarco.channelTag></li>
        
         <li><@customMarco.channelTag 1 current "current" "" ; classValue>
@@ -32,11 +32,11 @@
     	</@customMarco.channelTag></li>
        	 
        	<li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/msg" class="${classValue}">信息链接</a>
+    	<a href="http://www.spda.org.cn/content/2011-11/30/content_4986460.htm" class="${classValue}">信息链接</a>
     	</@customMarco.channelTag></li>
        
         <li><@customMarco.channelTag 0 current "current" "" ; classValue>
-    	<a href="/association/diplomacy/site/conn" class="${classValue}">联系我们</a>
+    	<a href="http://www.spda.org.cn/content/2012-08/24/content_5525441.htm" class="${classValue}">联系我们</a>
     	</@customMarco.channelTag></li>
     </ul>
 </div>
