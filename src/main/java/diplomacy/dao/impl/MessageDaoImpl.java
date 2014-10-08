@@ -106,7 +106,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
     @Override
     public PagerBean<Message> listMessageBySender(User user, int offset, int limit) {
-        PagerBean<Message> ret = new PagerBean<>();
+        PagerBean<Message> ret = new PagerBean<Message>();
         HibernateTemplate template = getHibernateTemplate();
         DetachedCriteria criteria = queryCriteriaMessageBySender(user);
         DetachedCriteria countCriteria = queryCriteriaMessageBySender(user);
@@ -123,7 +123,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
     @Override
     public PagerBean<MessageBox> listMessageBoxByReceiver(User user, int offset, int limit) {
-        PagerBean<MessageBox> ret = new PagerBean<>();
+        PagerBean<MessageBox> ret = new PagerBean<MessageBox>();
         HibernateTemplate template = getHibernateTemplate();
         DetachedCriteria criteria = queryCriteriaMessageBoxByReceiver(user);
         DetachedCriteria countCriteria = queryCriteriaMessageBoxByReceiver(user);

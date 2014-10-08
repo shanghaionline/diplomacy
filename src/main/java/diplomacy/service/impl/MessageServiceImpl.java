@@ -139,7 +139,9 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
             ret.setStatus("ENABLED");
             ret.setUri(uri);
             messageDao.putAttachment(ret);
-        } catch (IllegalStateException | IOException e) {
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return ret;

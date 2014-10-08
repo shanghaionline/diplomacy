@@ -26,7 +26,9 @@ public class UploadAct implements ServletContextAware {
         try {
             file.transferTo(new File(path));
             ret = uri;
-        } catch (IllegalStateException | IOException e) {
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return ret;
