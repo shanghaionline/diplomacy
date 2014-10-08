@@ -42,6 +42,8 @@ public class UserAct {
     public String init() {
         userService.create("admin", "admin", UserStatus.ENABLED);
         userService.createSystem("会员", "PERM_MESSAGE_MEMBER");
+        userService.createSystem("理事", "PERM_MESSAGE_DIRECTOR");
+        userService.createSystem("会长", "PERM_MESSAGE_CHAIRMAN");
         return "index";
     }
 

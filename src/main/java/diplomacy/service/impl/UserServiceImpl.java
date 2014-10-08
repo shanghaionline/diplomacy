@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail("");
         user.setGroup("");
         userDao.save(user);
-        userDao.setUserMeta(user, new UserMeta("MULTIPLE_RECEIVER_GROUP", "PERM_MESSAGE_MEMBER"));
+        userDao.setUserMeta(user, new UserMeta("MULTIPLE_RECEIVER_GROUP", perm));
         userDao.refresh(user);
         return user;
     }
