@@ -39,7 +39,7 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
         Message msg = new Message();
         msg.setMsgType(MessageType.VALIDCODE);
         msg.setTitle("VALID CODE");
-        msg.setContent("验证码: " + code);
+        msg.setContent(String.format("【上海公共外交协会】您的验证码为：%s，请于10分钟内输入。工作人员不会向您索取，请勿泄露。", code));
         msg.setStatus(MessageStatus.UNSEND);
         messageDao.save(msg);
         messageDao.setMessageMeta(msg, new MessageMeta("validcode_target", target));
@@ -227,7 +227,11 @@ public class MessageServiceImpl implements MessageService, ServletContextAware {
             Message msg = item.getMessage();
             if (user == null || user.getPhone() == null || msg == null) continue;
             try {
-                int ret = mobileMessageService.sendMessage(user.getPhone(), msg.getTitle());
+                String title = msg.getTitle();
+                if (title.length() > 21) title = title.substring(0, 21);
+                String mms = String.format("您有一个站内信：“%s”，请登录上海公共外交协会 www.spda.org.cn查收[上海公共外交协会]",
+                        title);
+                int ret = mobileMessageService.sendMessage(user.getPhone(), mms);
                 if (ret == 0) {
                     item.setNoticed(true);
                     messageDao.save(item);
